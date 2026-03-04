@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soil Health Advisor - Farm Wisdom</title>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #2C5F2D;
+      --bg-light: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--bg-light);
+      color: #333;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+      z-index: 1001;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+    }
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    h1, h2, h3 {
+      color: var(--primary-color);
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    select, input[type=text], textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto;
+    }
+    button:hover {
+      background-color: #1A431A;
+    }
+    #result {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #E8F5E9;
+      border-left: 5px solid var(--primary-color);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html" class="active">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Soil Health Advisor
+  </header>
+
+  <main>
+    <h2>Check Your Soil Condition</h2>
+    <div class="form-group">
+  <label for="county">Select Your County</label>
+  <select id="county">
+    <option value="">-- Choose County --</option>
+    <option value="Nakuru">Nakuru</option>
+    <option value="Embu">Embu</option>
+    <option value="Kirinyaga">Kirinyaga</option>
+    <option value="Machakos">Machakos</option>
+    <option value="Uasin Gishu">Uasin Gishu</option>
+    <option value="Baringo">Baringo</option>
+    <option value="Bomet">Bomet</option>
+    <option value="Busia">Busia</option>
+    <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+    <option value="Garissa">Garissa</option>
+    <option value="Homabay">Homabay</option>
+    <option value="Isiolo">Isiolo</option>
+    <option value="Kajiado">Kajiado</option>
+    <option value="Kakamega">Kakamega</option>
+    <option value="Kericho">Kericho</option>
+    <option value="Kiambu">Kiambu</option>
+    <option value="Kilifi">Kilifi</option>
+    <option value="Kisii">Kisii</option>
+    <option value="Kisumu">Kisumu</option>
+    <option value="Kitui">Kitui</option>
+    <option value="Kwale">Kwale</option>
+    <option value="Laikipia">Laikipia</option>
+    <option value="Lamu">Lamu</option>
+    <option value="Makueni">Makueni</option>
+    <option value="Mandera">Mandera</option>
+    <option value="Marsabit">Marsabit</option>
+    <option value="Meru">Meru</option>
+    <option value="Migori">Migori</option>
+    <option value="Mombasa">Mombasa</option>
+    <option value="Murang'a">Murang'a</option>
+    <option value="Nairobi">Nairobi</option>
+    <option value="Nandi">Nandi</option>
+    <option value="Narok">Narok</option>
+    <option value="Nyamira">Nyamira</option>
+    <option value="Nyandarua">Nyandarua</option>
+    <option value="Nyeri">Nyeri</option>
+    <option value="Samburu">Samburu</option>
+    <option valu="Siaya">Siaya</option>
+    <option value="Taita-Taveta">Taita-Taveta</option>
+    <option value="Tana river">Tana river</option>
+    <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+    <option value="Trans Nzoia">Trans Nzoia</option>
+    <option value="Turkana">Turkana</option>
+    <option value="Vihiga">Vihiga</option>
+    <option value="Wajir">Wajir</option>
+    <option value="West Pokot ">West Pokot</option>
+  </select>
+</div>
+    <form id="soilForm">
+      <div class="form-group">
+        <label for="soilType">Soil Type</label>
+        <select id="soilType" required>
+          <option value="">-- Select Soil Type --</option>
+          <option value="clay">Clay</option>
+          <option value="sandy">Sandy</option>
+          <option value="loamy">Loamy</option>
+          <option value="black">Black cotton</option>
+          <option value="red">Red volcanic</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="color">Soil Color</label>
+        <input type="text" id="color" placeholder="e.g. dark brown, reddish, grey" />
+      </div>
+      <div class="form-group">
+        <label for="symptoms">Visible Issues</label>
+        <textarea id="symptoms" rows="4" placeholder="e.g. water runs off fast, stunted crop growth"></textarea>
+      </div>
+      <div class="form-group">
+  <label for="photo">Upload Optional Soil Image</label>
+  <input type="file" id="photo" accept="image/*" />
+</div>
+      <button type="submit">Analyze Soil</button>
+    </form>
+    <div id="result"></div>
+    <canvas id="phGraph" width="400" height="80" style="margin: 10px auto; display: block;"></canvas>
+  </main>
+
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('open');
+    }
+ const countySoilCrops = {
+  "Baringo": { soil: "Loamy and Sandy Soils (Luvisols, Cambisols)", crops: ["Maize", "Sorghum", "Millet", "Goat Weed (for pasture)", "Beans", "Cassava", "Groundnuts", "Watermelon"] },
+  "Bomet": { soil: "Red Volcanic Loam (Nitisols)", crops: ["Tea", "Maize", "Beans", "Potatoes", "Sweet Potatoes", "Millet", "Sorghum", "Cabbages", "Kale"] },
+  "Bungoma": { soil: "Red Loam and Clay Soils (Nitisols, Acrisols, Ferralsols)", crops: ["Sugarcane", "Maize", "Beans", "Millet", "Sorghum", "Sweet Potatoes", "Sunflower", "Tobacco", "Coffee"] },
+  "Busia": { soil: "Red and Yellow Clay Loam (Acrisols, Ferralsols)", crops: ["Cassava", "Millet", "Sorghum", "Sweet Potatoes", "Groundnuts", "Beans", "Maize", "Sugarcane", "Cotton"] },
+  "Elgeyo-Marakwet": { soil: "Red Volcanic Loam (Nitisols)", crops: ["Maize", "Potatoes", "Wheat", "Pyrethrum", "Tea", "Coffee", "Fruits", "Vegetables", "Dairy Fodder"] },
+  "Embu": { soil: "Fertile Red Volcanic Loam (Nitisols)", crops: ["Coffee", "Tea", "Macadamia", "Maize", "Beans", "Bananas", "Sorghum", "Millet", "Horticultural Crops"] },
+  "Garissa": { soil: "Sandy and Saline Soils (Arenosols, Solonchaks)", crops: ["Sorghum", "Watermelon", "Onions", "Tomatoes (with irrigation)", "Fodder for Livestock", "Green Grams", "Pawpaw"] },
+  "Homa Bay": { soil: "Black Cotton and Loamy Soils (Vertisols, Luvisols)", crops: ["Sugarcane", "Sorghum", "Maize", "Cassava", "Groundnuts", "Millet", "Pineapples", "Rice", "Cotton"] },
+  "Isiolo": { soil: "Sandy and Brown Loam Soils (Arenosols, Cambisols)", crops: ["Sorghum", "Green Grams", "Cowpeas", "Onions", "Tomatoes (with irrigation)", "Watermelon", "Fodder for Livestock"] },
+  "Kajiado": { soil: "Loamy, Black Cotton, and Sandy Soils (Luvisols, Vertisols, Arenosols)", crops: ["Beans", "Maize (drought-tolerant)", "Onions", "Tomatoes", "Kales", "Cabbages", "Fodder for Livestock"] },
+  "Kakamega": { soil: "Fertile Red Loam (Nitisols, Acrisols)", crops: ["Sugarcane", "Maize", "Tea", "Beans", "Cassava", "Sweet Potatoes", "Soya Beans", "Groundnuts"] },
+  "Kericho": { soil: "Red Volcanic Loam (Nitisols)", crops: ["Tea", "Maize", "Potatoes", "Beans", "Coffee", "Vegetables", "Pyrethrum", "Wheat", "Dairy Fodder"] },
+  "Kiambu": { soil: "Fertile Red Volcanic Loam (Nitisols)", crops: ["Coffee", "Tea", "Maize", "Beans", "Potatoes", "Horticultural Crops (Vegetables, Fruits)", "Dairy Fodder"] },
+  "Kilifi": { soil: "Sandy and Brown Loam Soils (Arenosols, Cambisols)", crops: ["Cashew Nuts", "Coconuts", "Cassava", "Maize", "Cowpeas", "Green Grams", "Sisal", "Mangoes", "Citrus Fruits"] },
+  "Kirinyaga": { soil: "Red Volcanic and Ash Soils (Nitisols, Andosols)", crops: ["Rice (Mwea)", "Coffee", "Tea", "Bananas", "Maize", "Beans", "Tomatoes", "Onions", "Avocados"] },
+  "Kisii": { soil: "Red Volcanic Loam (Nitisols, Acrisols)", crops: ["Bananas", "Tea", "Coffee", "Maize", "Beans", "Avocados", "Sugarcane", "Sweet Potatoes", "Groundnuts"] },
+  "Kisumu": { soil: "Black Cotton and Claypan Soils (Vertisols, Planosols)", crops: ["Sugarcane", "Rice", "Sorghum", "Maize", "Cassava", "Sweet Potatoes", "Groundnuts", "Kales"] },
+  "Kitui": { soil: "Loamy and Sandy Soils (Luvisols, Acrisols, Arenosols)", crops: ["Sorghum", "Millet", "Green Grams", "Cowpeas", "Pigeon Peas", "Cassava", "Mangoes", "Watermelon"] },
+  "Kwale": { soil: "Sandy and Red Earth Soils (Arenosols, Ferralsols)", crops: ["Coconuts", "Cashew Nuts", "Cassava", "Maize", "Cowpeas", "Citrus Fruits (Oranges, Limes)", "Bixa"] },
+  "Laikipia": { soil: "Loamy and Black Cotton Soils (Luvisols, Cambisols, Vertisols)", crops: ["Wheat", "Barley", "Maize", "Beans", "Potatoes", "Horticultural Crops (Tomatoes, Onions, Capsicums)", "Pasture"] },
+  "Lamu": { soil: "Sandy and Alluvial Soils (Arenosols, Fluvisols)", crops: ["Coconuts", "Mangoes", "Cashew Nuts", "Cotton", "Sorghum", "Millet", "Cassava", "Simsim (Sesame)"] },
+  "Machakos": { soil: "Reddish-Brown Loam and Clay (Luvisols, Acrisols)", crops: ["Maize", "Beans", "Pigeon Peas", "Cowpeas", "Sorghum", "Millet", "Mangoes", "Oranges", "Vegetables"] },
+  "Makueni": { soil: "Reddish-Brown Loam and Clay (Luvisols, Acrisols)", crops: ["Mangoes", "Citrus Fruits (Pixie Oranges)", "Passion Fruit", "Green Grams", "Pigeon Peas", "Cowpeas", "Sorghum"] },
+  "Mandera": { soil: "Sandy and Saline Soils (Arenosols, Solonchaks, Regosols)", crops: ["Sorghum", "Maize (with irrigation)", "Onions", "Tomatoes", "Watermelon", "Kale", "Fodder for Livestock"] },
+  "Marsabit": { soil: "Sandy and Saline/Sodic Soils (Arenosols, Regosols, Solonetz)", crops: ["Sorghum", "Millet", "Maize (in highlands)", "Beans", "Khat (Miraa)", "Cowpeas", "Fodder for Livestock"] },
+  "Meru": { soil: "Fertile Red Volcanic Loam and Ash (Nitisols, Andosols)", crops: ["Tea", "Coffee", "Bananas", "Maize", "Beans", "Potatoes", "Wheat", "Horticultural Crops", "Khat (Miraa)"] },
+  "Migori": { soil: "Red Clay and Loam (Acrisols, Nitisols)", crops: ["Sugarcane", "Tobacco", "Maize", "Sorghum", "Sweet Potatoes", "Cassava", "Groundnuts", "Soya Beans", "Coffee"] },
+  "Mombasa": { soil: "Sandy Coastal Soils (Arenosols)", crops: ["Coconuts", "Cashew Nuts", "Cassava", "Vegetables (urban farming)", "Mangoes", "Cowpeas", "Sweet Potatoes"] },
+  "Murang'a": { soil: "Red Volcanic Loam (Nitisols)", crops: ["Tea", "Coffee", "Avocados", "Macadamia", "Maize", "Beans", "Bananas", "Arrowroots", "Sweet Potatoes"] },
+  "Nairobi": { soil: "Red Loam and Black Cotton Soils (Nitisols, Vertisols)", crops: ["Maize", "Beans", "Vegetables (urban/peri-urban farming)", "Kales", "Spinach", "Tomatoes", "Dairy Fodder"] },
+  "Nakuru": { soil: "Fertile Volcanic Loam and Ash (Andosols, Nitisols, Luvisols)", crops: ["Maize", "Wheat", "Barley", "Potatoes", "Beans", "Horticultural Crops (flowers, vegetables)", "Avocados"] },
+  "Nandi": { soil: "Red Volcanic Loam (Nitisols)", crops: ["Tea", "Maize", "Sugarcane", "Coffee", "Millet", "Beans", "Potatoes", "Avocados", "Dairy Fodder"] },
+  "Narok": { soil: "Loamy, Black Cotton, and Red Loam Soils (Luvisols, Vertisols, Nitisols)", crops: ["Wheat", "Barley", "Maize", "Potatoes", "Beans", "Sugarcane", "Pasture for Livestock"] },
+  "Nyamira": { soil: "Red Loam and Clay (Nitisols, Acrisols)", crops: ["Tea", "Bananas", "Coffee", "Maize", "Beans", "Sweet Potatoes", "Cassava", "Avocados", "Passion Fruit"] },
+  "Nyandarua": { soil: "Fertile Volcanic Ash and Loam (Andosols, Nitisols)", crops: ["Potatoes", "Peas", "Cabbages", "Carrots", "Wheat", "Barley", "Pyrethrum", "Dairy Fodder"] },
+  "Nyeri": { soil: "Red Volcanic Loam and Ash (Nitisols, Andosols)", crops: ["Coffee", "Tea", "Maize", "Beans", "Potatoes", "Bananas", "Horticultural Crops", "Dairy Fodder"] },
+  "Samburu": { soil: "Sandy and Brown Loam Soils (Arenosols, Cambisols, Regosols)", crops: ["Sorghum", "Millet", "Maize (drought-tolerant)", "Beans", "Pasture for Livestock"] },
+  "Siaya": { soil: "Red Clay and Claypan Soils (Acrisols, Ferralsols, Planosols)", crops: ["Maize", "Sorghum", "Millet", "Cassava", "Sweet Potatoes", "Beans", "Sugarcane", "Cotton"] },
+  "Taita-Taveta": { soil: "Loamy and Sandy Soils (Cambisols, Luvisols, Arenosols)", crops: ["Maize", "Beans", "Sisal", "Bananas", "Gemstones (mining)", "Horticultural Crops (Tomatoes, Onions)", "Mangoes"] },
+  "Tana River": { soil: "Alluvial/Riverbed and Sandy Soils (Fluvisols, Arenosols)", crops: ["Rice", "Maize", "Mangoes", "Bananas", "Green Grams", "Cowpeas", "Cotton", "Fodder for Livestock"] },
+  "Tharaka-Nithi": { soil: "Reddish-Brown Loam (Nitisols, Luvisols)", crops: ["Sorghum", "Millet", "Green Grams", "Coffee", "Tea", "Maize", "Beans", "Bananas"] },
+  "Trans Nzoia": { soil: "Red Loam and Clay (Nitisols, Ferralsols)", crops: ["Maize", "Wheat", "Beans", "Sunflower", "Coffee", "Seed Maize", "Dairy Fodder"] },
+  "Turkana": { soil: "Sandy and Saline Soils (Arenosols, Regosols, Solonchaks)", crops: ["Sorghum", "Millet", "Dates", "Cowpeas", "Fodder for Livestock", "Aloe Vera"] },
+  "Uasin Gishu": { soil: "Red Loam and Clay (Nitisols, Ferralsols)", crops: ["Maize", "Wheat", "Barley", "Pyrethrum", "Potatoes", "Sunflower", "Dairy Fodder"] },
+  "Vihiga": { soil: "Red Loam and Clay (Acrisols, Nitisols)", crops: ["Tea", "Maize", "Beans", "Bananas", "Sweet Potatoes", "Cassava", "Sorghum", "Millet"] },
+  "Wajir": { soil: "Sandy and Saline Soils (Arenosols, Solonchaks)", crops: ["Sorghum", "Watermelon", "Onions (with irrigation)", "Fodder for Livestock", "Green Grams"] },
+  "West Pokot": { soil: "Brown Loam and Red Clay (Cambisols, Luvisols, Nitisols)", crops: ["Maize", "Sorghum", "Millet", "Beans", "Potatoes", "Onions", "Pyrethrum", "Coffee"] }
+
+};
+const labLinks = {
+  Nakuru: "https://nakuru.go.ke/soil-testing",
+  Embu: "https://embu.go.ke/agriculture",
+  "Uasin Gishu": "https://uasingishu.go.ke/agriculture",
+  Kirinyaga: "https://kirinyaga.go.ke/soil",
+  Machakos: "https://machakos.go.ke/agriculture",
+  Baringo: "https://baringo.go.ke/agriculture",
+  Bomet: "https://bomet.go.ke/agriculture",
+  Busia: "https://busia.go.ke/agriculture",
+  "Elgeyo-Marakwet": "https://elgeyomarakwet.go.ke/agriculture",
+  Garissa: "https://garissa.go.ke/agriculture",
+  Homabay: "https://homabay.go.ke/agriculture",
+  Isiolo: "https://isiolo.go.ke/agriculture",
+  Kajiado: "https://kajiado.go.ke/agriculture",
+  Kakamega: "https://kakamega.go.ke/agriculture",
+  Kericho: "https://kericho.go.ke/agriculture",
+  Kiambu: "https://kiambu.go.ke/agriculture",
+  Kilifi: "https://kilifi.go.ke/agriculture",
+  Kisii: "https://kisii.go.ke/agriculture",
+  Kisumu: "https://kisumu.go.ke/agriculture",
+  Kitui: "https://kitui.go.ke/agriculture",
+  Kwale: "https://kwale.go.ke/agriculture",
+  Laikipia: "https://laikipia.go.ke/agriculture",
+  Lamu: "https://lamu.go.ke/agriculture",
+  Makueni: "https://makueni.go.ke/agriculture",
+  Mandera: "https://mandera.go.ke/agriculture",
+  Marsabit: "https://marsabit.go.ke/agriculture",
+  Meru: "https://meru.go.ke/agriculture",
+  Migori: "https://migori.go.ke/agriculture",
+  Mombasa: "https://mombasa.go.ke/agriculture",
+  "Murang'a": "https://muranga.go.ke/agriculture",
+  Nairobi: "https://nairobi.go.ke/agriculture",
+  Nandi: "https://nandi.go.ke/agriculture",
+  Narok: "https://narok.go.ke/agriculture",
+  Nyamira: "https://nyamira.go.ke/agriculture",
+  Nyandarua: "https://nyandarua.go.ke/agriculture",
+  Nyeri: "https://nyeri.go.ke/agriculture",
+  Samburu: "https://samburu.go.ke/agriculture",
+  Siaya: "https://siaya.go.ke/agriculture",
+  "Taita-Taveta": "https://taitataveta.go.ke/agriculture",
+  "Tana river": "https://tanariver.go.ke/agriculture",
+  "Tharaka-Nithi": "https://tharakanithi.go.ke/agriculture",
+  "Trans Nzoia": "https://transnzoia.go.ke/agriculture",
+  Turkana: "https://turkana.go.ke/agriculture",
+  Vihiga: "https://vihiga.go.ke/agriculture",
+  Wajir: "https://wajir.go.ke/agriculture",
+  "West Pokot": "https://westpokot.go.ke/agriculture"
+};
+const crops ={
+  clay: ["Sweet Potatoes", "Rice", "Broccoli", "Arrowroot", "Cassava", "Millet", "Beans", "Cabbages"],
+  sandy: ["Watermelon", "Cassava", "Peanuts", "Coconut", "Pawpaw", "Pineapples", "Groundnuts", "Zucchini"],
+  loamy: ["Maize", "Beans", "Tomatoes", "Carrots", "Spinach", "Coriander", "Onions", "Peas", "Lettuce", "Chili"],
+  black: ["Sorghum", "Millet", "Sunflower", "Pumpkin", "Green Grams", "Okra", "Garlic", "Beetroot"],
+  red: ["Tea", "Coffee", "Maize", "Avocado", "Mangoes", "Macadamia", "Passion Fruit", "Strawberries"]
+};
+
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+      }
+    }
+
+    document.getElementById("soilForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const type = document.getElementById("soilType").value;
+      const color = document.getElementById("color").value.toLowerCase();
+      const symptoms = document.getElementById("symptoms").value.toLowerCase();
+      const county = document.getElementById("county")?.value;
+
+      let message = "<h3>Soil Analysis Result:</h3><ul>";
+
+      if (type === "clay") {
+        message += "<li>Clay soil retains water. Add organic compost to improve drainage.</li>";
+      } else if (type === "sandy") {
+        message += "<li>Sandy soil drains quickly. Use mulch and compost to retain moisture.</li>";
+      } else if (type === "loamy") {
+        message += "<li>Loamy soil is ideal. Maintain fertility with compost and rotation.</li>";
+      } else if (type === "black") {
+        message += "<li>Black cotton soil swells/shrinks. Use raised beds for vegetables.</li>";
+      } else if (type === "red") {
+        message += "<li>Red volcanic soil is fertile. Avoid erosion on slopes using terracing.</li>";
+      }
+
+      if (color.includes("grey") || color.includes("yellow")) {
+        message += "<li>Soil color indicates low organic matter. Add compost or manure.</li>";
+      }
+
+      if (symptoms.includes("stunted") || symptoms.includes("poor growth")) {
+        message += "<li>Possible nitrogen or pH issue. Test pH and apply balanced fertilizer.</li>";
+      }
+const ph = (Math.random() * 3.5 + 4.5).toFixed(1);
+message += `<li><strong>Estimated Soil pH:</strong> ${ph}</li>`;
+let mergedCrops = [];
+
+if (countySoilCrops[county]) {
+  const { soil, crops: countyCrops } = countySoilCrops[county];
+  message += `<li><strong>Soil Type in ${county}:</strong> ${soil}</li>`;
+  mergedCrops = mergedCrops.concat(countyCrops);
+}
+
+if (crops[type]) {
+  mergedCrops = mergedCrops.concat(crops[type]);
+}
+
+const uniqueCrops = [...new Set(mergedCrops)];
+
+if (uniqueCrops.length > 0) {
+  message += `<li><strong>Recommended Crops:</strong> ${uniqueCrops.join(", ")}</li>`;
+}
+
+  message += `<li><strong>Fertilizer Tip:</strong> Add 2-4 tons compost per acre, and apply NPK (20:20:0) based on crop.</li>`;
+
+  if (county && labLinks[county]) {
+    message += `<li>Visit your <a href="${labLinks[county]}" target="_blank">local soil lab (${county})</a> for a professional test.</li>`;
+  }
+  message += "</ul><p>For best results, consider a lab soil test. Contact your local extension officer.</p>";
+  document.getElementById("result").innerHTML = message;
+  const ctx = document.getElementById('phGraph').getContext('2d');
+  ctx.clearRect(0, 0, 400, 80);
+  ctx.fillStyle = "#ccc";
+  ctx.fillRect(0, 30, 400, 20);
+  ctx.fillStyle = "#2C5F2D";
+  const x = ((ph - 4.5) / 3.5) * 400;
+  ctx.fillRect(0, 30, x, 20);
+  ctx.font = "14px Poppins";
+  ctx.fillStyle = "#000";
+  ctx.fillText(`pH: ${ph}`, x + 5, 45);
+    });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new TomSelect('#county', {
+      placeholder: 'Select your county',
+      allowEmptyOption: true,
+    });
+  });
+</script>
+</body>
+</html>

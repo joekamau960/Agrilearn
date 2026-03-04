@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Wisdom - Authenticate</title>
+  <style>
+    
+    body { font-family: sans-serif; background: #eef2f3; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .auth-container { background: white; padding: 2rem; border-radius: 10px; width: 350px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4faf4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.auth-card {
+  background: #ffffff;
+  padding: 3rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  color: #2e7d32;
+}
+
+.auth-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.auth-card input:focus {
+  border-color: #4caf50;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 12px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s;
+}
+
+.auth-card button:hover {
+  background: #1b5e20;
+}
+
+.auth-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-links a {
+  color: #0077cc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.auth-links a:hover {
+  color: #005999;
+}
+
+    h2 { text-align: center; color: green; }
+    input { width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { width: 100%; padding: 10px; margin-top: 10px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .toggle-link, .forgot-link { text-align: center; margin-top: 10px; cursor: pointer; color: #0077cc; text-decoration: underline; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+<div class="auth-container">
+  <div class="auth-card">
+ <body>
+  <div class="auth-container">
+    
+    <div id="login-form" class="auth-box">
+      <h1>🌾🚜Farm Wisdom🐄🌱</h1>
+      <h2>Login</h2>
+      <input type="text" id="login-username" placeholder="Username" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button onclick="loginUser()">Login</button>
+      <div class="forgot-link" onclick="showForgotForm()">Forgot Password?</div>
+      <div class="toggle-link" onclick="showSignupForm()">Don't have an account? Sign up</div>
+    </div>
+
+   
+    <div id="signup-form" class="auth-box hidden">
+      <h1>🌾🚜 Farm Wisdom 🐄🌱</h1>
+      <h2>Sign Up</h2>
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="text" id="signup-username" placeholder="Username" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <input type="password" id="signup-confirm" placeholder="Confirm Password" required />
+     <button onclick="registerUser()">Sign Up</button>
+    <div class="toggle-link" onclick="showLoginForm()">Already have an account? Log in</div>
+    </div>
+
+    
+    <div id="forgot-form" class="auth-box hidden">
+      <h1>🌾🚜 Farm Wisdom 🐄🌱</h1>
+      <h2>Reset Password</h2>
+      <input type="text" id="forgot-username" placeholder="Enter your username" />
+      <button onclick="resetPassword()">Send Reset Link</button>
+      <div class="toggle-link" onclick="showLoginForm()">Back to login</div>
+    </div>
+  </div>
+</body>
+
+
+  <div id="forgot-form" class="hidden">
+    <h2>Reset Password</h2>
+    <input type="text" id="forgot-username" placeholder="Enter your username">
+    <button onclick="resetPassword()">Send Reset Link</button>
+    <div class="toggle-link" onclick="showLoginForm()">Back to login</div>
+  </div>
+</div>
+
+<script>
+  function showSignupForm() {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('signup-form').classList.remove('hidden');
+    document.getElementById('forgot-form').classList.add('hidden');
+  }
+
+  function showLoginForm() {
+    document.getElementById('login-form').classList.remove('hidden');
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('forgot-form').classList.add('hidden');
+  }
+
+  function showForgotForm() {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('forgot-form').classList.remove('hidden');
+  }
+
+  function loginUser() {
+    const user = document.getElementById('login-username').value.trim();
+    const pass = document.getElementById('login-password').value.trim();
+
+    if (user && pass) {
+      localStorage.setItem('username', user);
+      localStorage.setItem('isAuthenticated', 'true');
+      window.location.href = 'index.html';
+    } else {
+      alert('Please enter username and password');
+    }
+  }
+
+  function registerUser() {
+    const email = document.getElementById('signup-email').value.trim();
+    const user = document.getElementById('signup-username').value.trim();
+    const pass = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm').value;
+
+    if (!email || !user || !pass || !confirm) {
+      alert('All fields are required.');
+      return;
+    }
+
+    if (pass !== confirm) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+  
+    localStorage.setItem('email', email);
+    localStorage.setItem('username', user);
+    localStorage.setItem('isAuthenticated', 'true');
+
+   
+    window.location.href = 'index.html';
+  }
+
+  function resetPassword() {
+    const user = document.getElementById('forgot-username').value.trim();
+    if (!user) {
+      alert('Please enter your username.');
+      return;
+    }
+    alert(`A password reset link would be sent to ${user}'s registered email.`);
+    showLoginForm();
+  }
+</script>
+   <footer>
+        <p>&copy; 2025 Farm .All Rights Reserved. @JoeDevs</p>
+    </footer>
+
+</body>
+</html>

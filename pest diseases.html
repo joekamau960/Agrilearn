@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pest & Disease Identifier - Farm Wisdom</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script src="script.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #2C5F2D;
+      --bg-light: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--bg-light);
+      color: #333;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+      z-index: 1001;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+    }
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    h2 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+    input[type="file"], select, textarea, button {
+      display: block;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    img {
+      display: block;
+      margin: auto;
+      max-width: 300px;
+    }
+    #result {
+      margin-top: 20px;
+      background: #eef9ee;
+      padding: 1rem;
+      border-left: 5px solid #2ecc71;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html" class="active">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - AI Pest & Disease Detector
+  </header>
+  <main>
+    <h2>Upload Image of Affected Crop</h2>
+    <input type="file" accept="image/*" id="imageUpload">
+    <img id="preview" src="" alt="" style="display:none">
+    <img id="profileIcon" src="profile.png" alt="Profile Icon" style="display:none;" />
+    <h2>Describe Symptoms & Select Crop</h2>
+    <select id="cropType">
+                <option value="">-- Select Crop --</option>
+                <option value="maize">Maize</option>
+                <option value="beans">Beans</option>
+                <option value="strawberries">Strawberries</option>
+                <option value="apples">Apples</option>
+                <option value="cabbages">Cabbages</option>
+                <option value="onions">Onions</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="kales">Kales</option>
+                <option value="spinach">Spinach</option>
+                <option value="pineapples">Pineapples</option>
+                <option value="oranges">Oranges</option>
+                <option value="sugarcane">Sugarcane</option>
+                <option value="watermelon">Watermelon</option>
+                <option value="bananas">Bananas</option>
+                <option value="pears">Pears</option>
+                <option value="avocado">Avocado</option>
+                <option value="peas">Peas</option>
+                <option value="passionfruit">Passion Fruit</option>
+                <option value="groundnuts">Groundnuts</option>
+                <option value="pawpaw">Pawpaw</option>
+                <option value="sweetpotatoes">Sweet Potatoes</option>
+                <option value="tea">Tea</option>
+                <option value="coffee">Coffee</option>
+                <option value="mangoes">Mangoes</option>
+                <option value="carrots">Carrots</option> 
+                <option value="potatoes">Potatoes</option>
+                <option value="macadamia">Macadamia</option>
+                <option value="khat">Khat</option>
+                <option value="lemons">lemons</option>
+                <option value="garlic">Garlic</option>
+                <option value="grams">Grams</option>
+                <option value="greengrams">Greengrams</option>
+                <option value="ginger">Ginger</option>
+                <option value="managu">Managu</option>
+                <option value="terere">Terere</option>
+                <option value="pepper">Pepper</option>
+                <option value="bell pepper">Bell pepper</option>
+                <option value="wheat">Wheat</option>
+                <option value="barley">Barley</option>
+                <option value="rice">Rice</option>
+                <option value="cotton">Cotton</option>
+                <option value="flowers">Flowers</option>
+                <option value="pyrethrum">Pyrethrum</option>
+                <option value="rosemary">Rosemary</option>
+                <option value="njahi">Njahi</option>
+                <option value="broccoli">Broccoli</option>
+                <option value="lettuce">Lettuce</option>
+                <option value="coriander">Coriander</option>
+                <option value="turmeric">Turmeric</option>
+                <option value="zucchini">Zucchini</option>
+                <option value="millet">Millet</option>
+                <option value="sorghum">Sorghum</option>
+                <option value="pumpkin">Pumpkin</option>
+                <option value="arrowroot">Arrowroot</option>
+                <option value="cassava">Cassava</option>
+                <option value="beetroot">Beetroot</option>
+                <option value="lime">Lime</option>
+                <option value="grapes">Grapes</option>
+                <option value="peanuts">Peanuts</option>
+                <option value="okra">Okra</option>
+                <option value="eggplant">Eggplant</option>
+                <option value="dates">Dates</option>
+                <option value="radish">Radish</option>
+                <option value="celery">Celery</option>
+                <option value="basil">Basil</option>
+                <option value="parsley">Parsley</option>
+                <option value="mustard greens">Mustard greens</option>
+                <option value="turnips">Turnips</option>
+                <option value="vanilla">Vanilla</option>
+                <option value="artichoke">Artichoke</option>
+                <option value="cranberries">Cranberries</option>
+                <option value="tangerines">Tangerines</option>
+                <option value="fig">Fig</option>
+                <option value="mulberry">Mulberry</option>
+                <option value="guava">Guava</option>
+                <option value="rhubarb">Rhubarb</option>
+    </select>
+    <textarea id="symptoms" placeholder="e.g., yellow spots, curled leaves"></textarea>
+  <button id="analyzeBtn">Analyze Symptoms</button>
+<button id="imageBtn">Analyze Image</button>
+
+    <div id="result"></div>
+  </main>
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+  </footer>
+  <script>
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('open');
+    }
+
+    const MODEL_URL = "https://teachablemachine.withgoogle.com/models/jxq99W4kE/";
+    let model, maxPredictions;
+
+    async function initModel() {
+      const modelURL = MODEL_URL + "model.json";
+      const metadataURL = MODEL_URL + "metadata.json";
+      model = await tmImage.load(modelURL, metadataURL);
+      maxPredictions = model.getTotalClasses();
+    }
+
+    async function populateCropTypes() {
+      const cropSelect = document.getElementById("cropType");
+      try {
+        const response = await fetch('http://localhost:3000/api/plant-diagnosis');
+        if (!response.ok) throw new Error(`Status: ${response.status}`);
+        const data = await response.json();
+        cropSelect.innerHTML = '<option value="">-- Select Crop --</option>';
+        for (const cropName in data) {
+          const option = document.createElement('option');
+          option.value = cropName;
+          option.textContent = cropName.charAt(0).toUpperCase() + cropName.slice(1);
+          cropSelect.appendChild(option);
+        }
+      } catch (error) {
+        console.error("Error fetching crop data:", error);
+        document.getElementById("result").innerHTML = "<p style='color: red;'>Failed to load crop list. Please ensure the backend server is running and accessible.</p>";
+      }
+    }
+
+    async function predictImage() {
+      if (!model) await initModel();
+      const image = document.getElementById("preview");
+      const prediction = await model.predict(image);
+      prediction.sort((a, b) => b.probability - a.probability);
+      const top = prediction[0];
+
+      const name = top.className;
+      const prob = (top.probability * 100).toFixed(2);
+      const resultDiv = document.getElementById("result");
+
+      resultDiv.innerHTML = "<p>Fetching diagnosis details from server... Please wait.</p>";
+
+      try {
+        const response = await fetch('http://localhost:3000/api/image-diagnosis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ predictedDisease: name })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`HTTP error! ${errorData.error || response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.diagnosis) {
+          resultDiv.innerHTML = `
+            <h3>Diagnosis: ${name} (${prob}%)</h3>
+            <p><strong>Danger Level:</strong> ${data.danger_level || 'N/A'}</p>
+            <h4>Treatment:</h4>
+            <ul>
+              <li><strong>Organic:</strong> ${data.treatment?.organic || 'N/A'}</li>
+              <li><strong>Chemical:</strong> ${data.treatment?.chemical || 'N/A'}</li>
+              <li><strong>Cultural:</strong> ${data.treatment?.cultural || 'N/A'}</li>
+            </ul>
+            <p><strong>Recommendations:</strong> ${data.recommendations || 'N/A'}</p>
+            <p><strong>Recommended Contacts:</strong> <a href="https://africafertilizer.org" target="_blank">Agrochemical Solutions</a></p>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style='color: orange;'>No specific treatment found for "${name}". Please consult an extension officer.</p>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p style='color: red;'>An error occurred: ${error.message}. Failed to get treatment details.</p>`;
+      }
+    }
+
+    async function analyzeWithGemini() {
+      const cropType = document.getElementById("cropType").value;
+      const symptoms = document.getElementById("symptoms").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!cropType || !symptoms) {
+        resultDiv.innerHTML = "<p style='color: red;'>Please select a crop type and describe the symptoms.</p>";
+        return;
+      }
+
+      resultDiv.innerHTML = "<p>Analyzing symptoms with AI... Please wait.</p>";
+
+      try {
+        const response = await fetch('http://localhost:3000/analyze-symptoms', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: `Crop: ${cropType}, Symptoms: ${symptoms}` })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`HTTP error! ${errorData.error || response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (data.diagnosis) {
+          resultDiv.innerHTML = `
+            <h3>AI Diagnosis for ${cropType}: ${data.diagnosis}</h3>
+            <p><strong>Danger Level:</strong> ${data.danger_level || 'N/A'}</p>
+            <p><strong>Symptoms Described:</strong> ${data.symptoms || 'N/A'}</p>
+            <h4>Treatment:</h4>
+            <ul>
+              <li><strong>Organic:</strong> ${data.treatment?.organic || 'N/A'}</li>
+              <li><strong>Chemical:</strong> ${data.treatment?.chemical || 'N/A'}</li>
+              <li><strong>Cultural:</strong> ${data.treatment?.cultural || 'N/A'}</li>
+            </ul>
+            <p><strong>Recommendations:</strong> ${data.recommendations || 'N/A'}</p>
+            <p><strong>Recommended Contacts:</strong> <a href="https://africafertilizer.org" target="_blank">Agrochemical Solutions</a></p>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p style='color: orange;'>AI could not provide a specific diagnosis. ${data.recommendations || 'No suggestions available.'}</p>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p style='color: red;'>An error occurred: ${error.message}. Please ensure the backend server is running.</p>`;
+      }
+    }
+
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+        return;
+      }
+
+      populateCropTypes();
+
+      document.getElementById("analyzeBtn").addEventListener("click", analyzeWithGemini);
+      document.getElementById("imageBtn").addEventListener("click", predictImage);
+      document.getElementById("imageUpload").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        const img = document.getElementById("preview");
+        img.src = URL.createObjectURL(file);
+        img.style.display = 'block';
+      });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irrigation Planner - Farm Wisdom</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4fbff;
+    }
+    .container {
+      max-width: 960px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    select, input[type=number], input[type=text] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #result {
+      margin-top: 30px;
+      background: #eaf9f1;
+      padding: 1rem;
+      border-left: 5px solid #2ecc71;
+    }
+    .layout-img {
+      max-width: 100%;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+ <script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html" class="active">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Smart Irrigation Planner
+  </header>
+  <main>
+    <h2>Plan Efficient Irrigation for Your Crop</h2>
+    <form id="irrigationForm">
+      <label for="crop">Select Crop</label>
+      <select id="crop">
+               <option value="">-- Choose Crop --</option>
+                <option value="maize">Maize</option>
+                <option value="beans">Beans</option>
+                <option value="strawberries">Strawberries</option>
+                <option value="apples">Apples</option>
+                <option value="cabbages">Cabbages</option>
+                <option value="onions">Onions</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="kales">Kales</option>
+                <option value="spinach">Spinach</option>
+                <option value="pineapples">Pineapples</option>
+                <option value="oranges">Oranges</option>
+                <option value="sugarcane">Sugarcane</option>
+                <option value="watermelon">Watermelon</option>
+                <option value="bananas">Bananas</option>
+                <option value="pears">Pears</option>
+                <option value="avocado">Avocado</option>
+                <option value="peas">Peas</option>
+                <option value="passionfruit">Passion Fruit</option>
+                <option value="groundnuts">Groundnuts</option>
+                <option value="pawpaw">Pawpaw</option>
+                <option value="sweetpotatoes">Sweet Potatoes</option>
+                <option value="tea">Tea</option>
+                <option value="coffee">Coffee</option>
+                <option value="mangoes">Mangoes</option>
+                <option value="carrots">Carrots</option> 
+                <option value="potatoes">Potatoes</option>
+                <option value="macadamia">Macadamia</option>
+                <option value="khat">Khat</option>
+                <option value="lemons">lemons</option>
+                <option value="garlic">Garlic</option>
+                <option value="grams">Grams</option>
+                <option value="greengrams">Greengrams</option>
+                <option value="ginger">Ginger</option>
+                <option value="managu">Managu</option>
+                <option value="terere">Terere</option>
+                <option value="pepper">Pepper</option>
+                <option value="bell pepper">Bell pepper</option>
+                <option value="wheat">Wheat</option>
+                <option value="barley">Barley</option>
+                <option value="rice">Rice</option>
+                <option value="cotton">Cotton</option>
+                <option value="flowers">Flowers</option>
+                <option value="pyrethrum">Pyrethrum</option>
+                <option value="rosemary">Rosemary</option>
+                <option value="njahi">Njahi</option>
+                <option value="broccoli">Broccoli</option>
+                <option value="lettuce">Lettuce</option>
+                <option value="coriander">Coriander</option>
+                <option value="turmeric">Turmeric</option>
+                <option value="zucchini">Zucchini</option>
+                <option value="millet">Millet</option>
+                <option value="sorghum">Sorghum</option>
+                <option value="pumpkin">Pumpkin</option>
+                <option value="arrowroot">Arrowroot</option>
+                <option value="cassava">Cassava</option>
+                <option value="beetroot">Beetroot</option>
+                <option value="lime">Lime</option>
+                <option value="grapes">Grapes</option>
+                <option value="peanuts">Peanuts</option>
+                <option value="okra">Okra</option>
+                <option value="eggplant">Eggplant</option>
+                <option value="dates">Dates</option>
+                <option value="radish">Radish</option>
+                <option value="celery">Celery</option>
+                <option value="basil">Basil</option>
+                <option value="parsley">Parsley</option>
+                <option value="mustard greens">Mustard greens</option>
+                <option value="turnips">Turnips</option>
+                <option value="vanilla">Vanilla</option>
+                <option value="artichoke">Artichoke</option>
+                <option value="cranberries">Cranberries</option>
+                <option value="tangerines">Tangerines</option>
+                <option value="fig">Fig</option>
+                <option value="mulberry">Mulberry</option>
+                <option value="guava">Guava</option>
+                <option value="rhubarb">Rhubarb</option>
+                <option value="green onions">Green onions</option>
+                
+      </select>
+ <label for="county">Select County:</label>
+                <select id="county" required>
+                    <option value="">-- Choose County --</option>
+    <option value="Nakuru">Nakuru</option>
+    <option value="Embu">Embu</option>
+    <option value="Kirinyaga">Kirinyaga</option>
+    <option value="Machakos">Machakos</option>
+    <option value="Uasin Gishu">Uasin Gishu</option>
+    <option value="Baringo">Baringo</option>
+    <option value="Bomet">Bomet</option>
+    <option value="Busia">Busia</option>
+    <option value="Elgeyo-Marakwet">Elgeyo-Marakwet</option>
+    <option value="Garissa">Garissa</option>
+    <option value="Homabay">Homabay</option>
+    <option value="Isiolo">Isiolo</option>
+    <option value="Kajiado">Kajiado</option>
+    <option value="Kakamega">Kakamega</option>
+    <option value="Kericho">Kericho</option>
+    <option value="Kiambu">Kiambu</option>
+    <option value="Kilifi">Kilifi</option>
+    <option value="Kisii">Kisii</option>
+    <option value="Kisumu">Kisumu</option>
+    <option value="Kitui">Kitui</option>
+    <option value="Kwale">Kwale</option>
+    <option value="Laikipia">Laikipia</option>
+    <option value="Lamu">Lamu</option>
+    <option value="Makueni">Makueni</option>
+    <option value="Mandera">Mandera</option>
+    <option value="Marsabit">Marsabit</option>
+    <option value="Meru">Meru</option>
+    <option value="Migori">Migori</option>
+    <option value="Mombasa">Mombasa</option>
+    <option value="Murang'a">Murang'a</option>
+    <option value="Nairobi">Nairobi</option>
+    <option value="Nandi">Nandi</option>
+    <option value="Narok">Narok</option>
+    <option value="Nyamira">Nyamira</option>
+    <option value="Nyandarua">Nyandarua</option>
+    <option value="Nyeri">Nyeri</option>
+    <option value="Samburu">Samburu</option>
+    <option valu="Siaya">Siaya</option>
+    <option value="Taita-Taveta">Taita-Taveta</option>
+    <option value="Tana river">Tana river</option>
+    <option value="Tharaka-Nithi">Tharaka-Nithi</option>
+    <option value="Trans Nzoia">Trans Nzoia</option>
+    <option value="Turkana">Turkana</option>
+    <option value="Vihiga">Vihiga</option>
+    <option value="Wajir">Wajir</option>
+    <option value="West Pokot ">West Pokot</option>
+  </select>
+      <label for="stage">Growth Stage</label>
+      <select id="stage">
+        <option value="">-- Choose Stage --</option>
+        <option value="early">Early</option>
+        <option value="mid">Mid</option>
+        <option value="late">Late</option>
+      </select>
+      <label for="region">Select Region</label>
+      <select id="region" required>
+    <option value="">Select Region</option>
+    <option value="central-highlands-east">Central Highlands - East (e.g., Kiambu, Murang'a)</option>
+    <option value="mount-kenya-region">Mount Kenya Region (e.g., Meru, Embu, Kirinyaga)</option>
+    <option value="rift-valley-highlands">Rift Valley Highlands (e.g., Mau, Kericho, Nandi)</option>
+    <option value="lake-basin-highlands">Lake Basin Highlands (e.g., Kisii, Kakamega, Bungoma)</option>
+    <option value="central-rift-valley-floor">Central Rift Valley - Floor (e.g., Naivasha, Nakuru)</option>
+    <option value="northern-rift-arid">Northern Rift - Arid (e.g., Turkana, Baringo Lowlands, parts of West Pokot)</option>
+    <option value="eastern-lowlands-semi-arid">Eastern Lowlands - Semi-Arid (e.g., Machakos, Makueni, Kitui)</option>
+    <option value="north-eastern-arid">North Eastern - Arid (e.g., Garissa, Wajir, Mandera)</option>
+    <option value="coastal-strip">Coastal Strip (e.g., Mombasa, Kilifi, Lamu)</option>
+    <option value="laikipia-plateau">Laikipia Plateau (Semi-Arid)</option>
+    <option value="nairobi-peri-urban">Nairobi & Peri-Urban (Mixed)</option>
+    </select>
+      <label for="area">Farm Size (acres)</label>
+      <input type="number" id="area" placeholder="e.g., 1.5" min="0.1" step="0.1">
+
+      <button type="submit">Generate Plan</button>
+    </form>
+    <div id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+  </footer>
+<script>
+    const cropData = {
+        maize: { waterPerDay: 5, layout: "sprinkler", tip: "Maize needs consistent water, especially during tasseling and silking. Sprinklers or furrow irrigation are common. Daily need approx 300-500-400mm depending on stage.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        tomatoes: { waterPerDay: 6, layout: "drip", tip: "Drip irrigation is ideal to prevent fungal diseases and ensure deep root watering. Critical during flowering and fruit set. Daily need approx 400-600-500mm depending on stage.", stages: { early: 0.7, mid: 1.2, late: 1.0 } },
+        cabbage: { waterPerDay: 5.5, layout: "sprinkler", tip: "Cabbages need consistent moisture, especially during head formation. Sprinklers help with wide coverage. Daily need approx 350-550-450mm depending on stage.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        beans: { waterPerDay: 4, layout: "sprinkler", tip: "Frequent light irrigation recommended. Critical during flowering and pod filling. Daily need approx 200-350-300mm depending on stage.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        onions: { waterPerDay: 4.5, layout: "drip", tip: "Drip system helps prevent root rot and ensures even bulb development. Avoid overwatering near harvest. Daily need approx 250-400-350mm depending on stage.", stages: { early: 0.7, mid: 1.0, late: 1.1 } },
+        strawberries: { waterPerDay: 4, layout: "drip", tip: "Strawberries require consistent, shallow moisture. Drip irrigation prevents fruit rot and leaf diseases. Crucial during flowering and fruiting.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        apples: { waterPerDay: 5, layout: "drip", tip: "Apple trees need deep, infrequent watering once established. Drip or micro-sprinklers are highly efficient, especially during fruit development.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        pineapples: { waterPerDay: 3.5, layout: "drip", tip: "Pineapples are relatively drought-tolerant but benefit from supplemental drip irrigation during dry spells for better fruit size and quality.", stages: { early: 0.9, mid: 1.1, late: 0.9 } },
+        oranges: { waterPerDay: 5, layout: "drip", tip: "Citrus trees thrive with consistent moisture. Drip irrigation is efficient, preventing water stress which can lead to fruit drop.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        sugarcane: { waterPerDay: 7, layout: "drip", tip: "Sugarcane is a high-water-demand crop, especially during its grand growth phase. Drip irrigation can significantly improve water use efficiency compared to furrow.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        watermelon: { waterPerDay: 6, layout: "drip", tip: "Watermelons need ample water during flowering and fruit enlargement. Drip irrigation helps keep foliage dry, reducing disease risk.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        bananas: { waterPerDay: 7, layout: "drip", tip: "Bananas are heavy water consumers, needing constant moisture for optimal growth and fruit development. Drip or micro-sprinklers are ideal.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        pears: { waterPerDay: 5, layout: "drip", tip: "Similar to apples, pears benefit from consistent deep watering, especially during fruit set and sizing. Drip is recommended.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        avocado: { waterPerDay: 6, layout: "drip", tip: "Avocados are sensitive to both waterlogging and drought. Drip irrigation provides precise moisture, crucial for fruit development and to prevent root rot.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        peas: { waterPerDay: 3.5, layout: "sprinkler", tip: "Peas need consistent moisture, particularly during flowering and pod filling. Avoid water stress for good yields. Sprinklers are generally suitable.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        passionfruit: { waterPerDay: 4.5, layout: "drip", tip: "Passion fruit vines need regular watering, especially during flowering and fruit production. Drip irrigation supports high yields and fruit quality.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        groundnuts: { waterPerDay: 4, layout: "sprinkler", tip: "Groundnuts require adequate moisture during pegging and pod development. Sprinklers or furrow irrigation are common.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        pawpaw: { waterPerDay: 5, layout: "drip", tip: "Pawpaws need consistent moisture for continuous fruiting. Drip irrigation helps prevent water stress and maintain healthy trees.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        sweetpotatoes: { waterPerDay: 4, layout: "drip", tip: "Sweet potatoes need consistent moisture during tuber development. Drip irrigation helps optimize tuber size and quality.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        tea: { waterPerDay: 4.5, layout: "drip", tip: "Tea requires consistent rainfall or supplemental irrigation to ensure continuous flushing of leaves. Drip or overhead sprinklers in dry spells.", stages: { early: 1.0, mid: 1.0, late: 1.0 } },
+        coffee: { waterPerDay: 5, layout: "drip", tip: "Coffee needs adequate moisture, especially during flowering and berry development. Drip irrigation helps conserve water and improve yield stability.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        mangoes: { waterPerDay: 5, layout: "drip", tip: "Mango trees benefit from deep watering during fruit development. Drip irrigation helps reduce water waste and supports fruit quality.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        carrots: { waterPerDay: 4, layout: "sprinkler", tip: "Carrots need consistent, shallow moisture for uniform root development. Sprinklers work well to keep the soil moist and prevent cracking.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        potatoes: { waterPerDay: 5.5, layout: "drip", tip: "Potatoes have high water demand, especially during tuber initiation and bulking. Drip irrigation reduces disease risk and improves water efficiency.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        macadamia: { waterPerDay: 4.5, layout: "drip", tip: "Macadamia trees benefit from supplemental irrigation during dry periods, particularly for nut development. Drip or micro-sprinklers are effective.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        khat: { waterPerDay: 3, layout: "drip", tip: "Khat is relatively drought-tolerant but benefits from moderate irrigation to enhance leaf quality and yield. Drip conserves water.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        lemons: { waterPerDay: 5, layout: "drip", tip: "Similar to oranges, lemons need consistent moisture for good fruit production. Drip irrigation is highly efficient for citrus.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        garlic: { waterPerDay: 3.5, layout: "drip", tip: "Garlic needs consistent moisture during the vegetative stage and bulb formation. Drip irrigation minimizes foliar diseases.", stages: { early: 0.8, mid: 1.0, late: 1.1 } },
+        grams: { waterPerDay: 3.5, layout: "sprinkler", tip: "Grams need moderate, consistent moisture, especially during flowering and pod development. Sprinklers are suitable.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        greengrams: { waterPerDay: 3.5, layout: "sprinkler", tip: "Greengrams are similar to grams in their water needs, requiring consistent moisture for good pod filling. Sprinklers work well.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        ginger: { waterPerDay: 4.5, layout: "drip", tip: "Ginger needs consistent, ample moisture for good rhizome development. Drip irrigation is effective to maintain soil moisture.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        managu: { waterPerDay: 4, layout: "sprinkler", tip: "Managu (African Nightshade) needs consistent moisture for tender leaves and continuous harvest. Sprinklers are effective.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        terere: { waterPerDay: 4, layout: "sprinkler", tip: "Terere (Amaranth) requires regular watering for rapid growth and tender leaves. Sprinklers are generally suitable.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        pepper: { waterPerDay: 5, layout: "drip", tip: "Peppers (chili) need consistent moisture, especially during flowering and fruiting. Drip irrigation prevents blossom end rot and conserves water.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        "bell pepper": { waterPerDay: 5.5, layout: "drip", tip: "Bell peppers have high water demands during fruit development. Drip irrigation ensures uniform fruit size and reduces disease.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        wheat: { waterPerDay: 4, layout: "sprinkler", tip: "Wheat requires critical irrigation at tillering, jointing, booting, and grain filling stages. Sprinklers are commonly used for broad acreage.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        barley: { waterPerDay: 4, layout: "sprinkler", tip: "Barley has similar water needs to wheat, with critical periods during tillering and grain filling. Sprinklers are efficient for large fields.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        rice: { waterPerDay: 10, layout: "furrow", tip: "Rice is a water-intensive crop, often grown in flooded conditions. However, drip or less water-intensive systems are emerging. (Note: 'furrow' used here as a placeholder for high water need traditional method, but modern rice can use sprinklers/drip).", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        cotton: { waterPerDay: 5.5, layout: "drip", tip: "Cotton needs significant water during flowering and boll development. Drip irrigation can improve fiber quality and yield.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        flowers: { waterPerDay: 4, layout: "drip", tip: "Water needs vary by flower type. High-value flowers often use drip or micro-sprinklers for precise watering and disease prevention.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        pyrethrum: { waterPerDay: 3.5, layout: "sprinkler", tip: "Pyrethrum is relatively drought-tolerant but benefits from supplemental irrigation during dry spells for sustained flower production. Sprinklers are common.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        rosemary: { waterPerDay: 2.5, layout: "drip", tip: "Rosemary is drought-tolerant once established and prefers well-drained soil. Infrequent deep watering with drip is best.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        njahi: { waterPerDay: 3.5, layout: "sprinkler", tip: "Njahi (Hyacinth beans) need consistent moisture for pod development. Sprinklers are generally suitable.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        broccoli: { waterPerDay: 5, layout: "sprinkler", tip: "Broccoli needs consistent moisture, especially during head formation, to prevent bolting. Sprinklers are commonly used.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        lettuce: { waterPerDay: 4, layout: "sprinkler", tip: "Lettuce requires consistent, shallow watering for crisp, tender leaves. Sprinklers or drip are effective.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        coriander: { waterPerDay: 3, layout: "sprinkler", tip: "Coriander needs consistent moisture to prevent bolting, especially in hot weather. Sprinklers are generally suitable.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        turmeric: { waterPerDay: 4.5, layout: "drip", tip: "Turmeric needs consistent moisture for healthy rhizome development. Drip irrigation helps maintain ideal soil conditions.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        zucchini: { waterPerDay: 5.5, layout: "drip", tip: "Zucchini is a fast-growing, high-yielding crop that needs ample water, especially during flowering and fruit set. Drip prevents disease.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        millet: { waterPerDay: 3.5, layout: "sprinkler", tip: "Millet is drought-tolerant but benefits from supplemental irrigation during critical growth stages for improved yield. Sprinklers are common.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        sorghum: { waterPerDay: 3.5, layout: "sprinkler", tip: "Sorghum is known for drought tolerance but can significantly increase yield with strategic irrigation, especially at flowering. Sprinklers are efficient.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        pumpkin: { waterPerDay: 5, layout: "drip", tip: "Pumpkins require ample water during flowering and fruit enlargement. Drip irrigation helps keep foliage dry and reduce disease.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        arrowroot: { waterPerDay: 4, layout: "drip", tip: "Arrowroot needs consistent moisture for good rhizome development. Drip irrigation is effective for maintaining soil moisture.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        cassava: { waterPerDay: 3, layout: "drip", tip: "Cassava is drought-tolerant but irrigation, especially in early stages and during tuber bulking, can significantly increase yield. Drip conserves water.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        beetroot: { waterPerDay: 4, layout: "drip", tip: "Beetroot needs consistent moisture for good root development and to prevent cracking. Drip irrigation ensures even watering.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        lime: { waterPerDay: 5, layout: "drip", tip: "Similar to other citrus, limes need consistent moisture for optimal fruit production. Drip irrigation is highly efficient.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        grapes: { waterPerDay: 4, layout: "drip", tip: "Grapevines need careful watering, crucial during berry set and veraison. Drip irrigation allows precise control and prevents fungal issues.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        peanuts: { waterPerDay: 4, layout: "sprinkler", tip: "Peanuts (same as groundnuts) require adequate moisture during pegging and pod development. Sprinklers or furrow irrigation are common.", stages: { early: 0.8, mid: 1.1, late: 0.9 } },
+        okra: { waterPerDay: 4.5, layout: "drip", tip: "Okra needs consistent moisture for continuous pod production. Drip irrigation prevents blossom end rot and maintains plant health.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        eggplant: { waterPerDay: 5, layout: "drip", tip: "Eggplant has high water demands, especially during flowering and fruit development. Drip irrigation prevents stress and improves yield.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        dates: { waterPerDay: 6, layout: "drip", tip: "Date palms need significant water, especially when young and during fruit development. Drip irrigation is efficient for these long-lived trees.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        radish: { waterPerDay: 3.5, layout: "sprinkler", tip: "Radishes need consistent, shallow moisture for quick and tender root development. Sprinklers are effective for their rapid growth cycle.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        celery: { waterPerDay: 5.5, layout: "drip", tip: "Celery is a high-water-demand crop, requiring constant moisture to prevent stringiness and ensure crisp stalks. Drip is ideal.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        basil: { waterPerDay: 3, layout: "drip", tip: "Basil needs consistent moisture but dislikes waterlogging. Drip irrigation at the base helps keep leaves dry and healthy.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        parsley: { waterPerDay: 3, layout: "drip", tip: "Parsley prefers consistently moist soil. Drip irrigation or careful hand watering prevents it from drying out.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        "mustard greens": { waterPerDay: 4, layout: "sprinkler", tip: "Mustard greens need regular watering for tender leaves and to prevent bolting. Sprinklers are suitable for even coverage.", stages: { early: 0.9, mid: 1.0, late: 1.0 } },
+        turnips: { waterPerDay: 4, layout: "sprinkler", tip: "Turnips require consistent moisture for good root development and to prevent woodiness. Sprinklers work well.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        vanilla: { waterPerDay: 4.5, layout: "drip", tip: "Vanilla orchids need high humidity and consistent, but not waterlogged, moisture, especially during flowering. Drip or misting systems are beneficial.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        artichoke: { waterPerDay: 5, layout: "drip", tip: "Artichokes are heavy feeders and drinkers, requiring consistent moisture for large, tender heads. Drip irrigation is highly effective.", stages: { early: 0.8, mid: 1.2, late: 1.0 } },
+        cranberries: { waterPerDay: 7, layout: "sprinkler", tip: "Cranberries are bog plants requiring significant water, often by flooding, but supplemental sprinkler irrigation is used for frost protection and growth.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        tangerines: { waterPerDay: 5, layout: "drip", tip: "Tangerines, like other citrus, benefit from consistent moisture delivered efficiently by drip irrigation.", stages: { early: 0.9, mid: 1.2, late: 1.0 } },
+        fig: { waterPerDay: 4, layout: "drip", tip: "Fig trees are relatively drought-tolerant but produce better with supplemental irrigation, especially during fruit ripening. Drip is efficient.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        mulberry: { waterPerDay: 4, layout: "drip", tip: "Mulberry trees are adaptable but consistent moisture improves fruit production. Drip irrigation is suitable.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        guava: { waterPerDay: 4.5, layout: "drip", tip: "Guava trees benefit from consistent watering, especially during flowering and fruit set, for better yields. Drip irrigation is effective.", stages: { early: 0.9, mid: 1.1, late: 1.0 } },
+        rhubarb: { waterPerDay: 4, layout: "sprinkler", tip: "Rhubarb needs consistent moisture for good stalk development, especially during dry periods. Sprinklers are suitable.", stages: { early: 0.8, mid: 1.1, late: 1.0 } },
+        "green onions": { waterPerDay: 3.5, layout: "sprinkler", tip: "Green onions need consistent moisture for rapid growth and tender stalks. Sprinklers are effective for shallow roots.", stages: { early: 0.9, mid: 1.0, late: 1.0 } }
+    };
+
+    const regionClimateFactors = {
+        "central-highlands-east": 0.9,
+        "mount-kenya-region": 0.95,
+        "rift-valley-highlands": 0.98,
+        "lake-basin-highlands": 1.0,
+        "central-rift-valley-floor": 1.2,
+        "northern-rift-arid": 1.5,
+        "eastern-lowlands-semi-arid": 1.3,
+        "north-eastern-arid": 1.6,
+        "coastal-strip": 1.1,
+        "laikipia-plateau": 1.25,
+        "nairobi-peri-urban": 0.95,
+    };
+    const waterTariffs = {
+        "central-highlands-east": 0.05,
+        "mount-kenya-region": 0.052,
+        "rift-valley-highlands": 0.048,
+        "lake-basin-highlands": 0.055,
+        "central-rift-valley-floor": 0.06,
+        "northern-rift-arid": 0.07,
+        "eastern-lowlands-semi-arid": 0.065,
+        "north-eastern-arid": 0.075,
+        "coastal-strip": 0.06,
+        "laikipia-plateau": 0.062,
+        "nairobi-peri-urban": 0.055,
+        "default": 0.05
+    };
+
+    const countyToRegionMap = {
+        "mombasa": "coastal-strip",
+        "kwale": "coastal-strip",
+        "kilifi": "coastal-strip",
+        "lamu": "coastal-strip",
+        "taita-taveta": "coastal-strip",
+
+        "tana-river": "eastern-lowlands-semi-arid",
+        "kitui": "eastern-lowlands-semi-arid",
+        "machakos": "eastern-lowlands-semi-arid",
+        "makueni": "eastern-lowlands-semi-arid",
+        "isiolo": "eastern-lowlands-semi-arid",
+
+        "garissa": "north-eastern-arid",
+        "wajir": "north-eastern-arid",
+        "mandera": "north-eastern-arid",
+        "marsabit": "north-eastern-arid",
+
+        "kiambu": "central-highlands-east",
+        "muranga": "central-highlands-east",
+        "nyeri": "mount-kenya-region",
+        "kirinyaga": "mount-kenya-region",
+        "embu": "mount-kenya-region",
+        "meru": "mount-kenya-region",
+        "tharaka-nithi": "mount-kenya-region",
+        "nairobi": "nairobi-peri-urban",
+
+        "nakuru": "central-rift-valley-floor",
+        "nyandarua": "rift-valley-highlands",
+        "narok": "rift-valley-highlands",
+        "kajiado": "eastern-lowlands-semi-arid",
+        "kericho": "rift-valley-highlands",
+        "bomet": "rift-valley-highlands",
+        "laikipia": "laikipia-plateau",
+        "baringo": "northern-rift-arid",
+        "turkana": "northern-rift-arid",
+        "west-pokot": "northern-rift-arid",
+        "samburu": "northern-rift-arid",
+        "trans-nzoia": "rift-valley-highlands",
+        "uasin-gishu": "rift-valley-highlands",
+        "elgeyo-marakwet": "rift-valley-highlands",
+        "nandi": "rift-valley-highlands",
+
+        "kakamega": "lake-basin-highlands",
+        "vihiga": "lake-basin-highlands",
+        "bungoma": "lake-basin-highlands",
+        "busia": "lake-basin-highlands",
+        "siaya": "lake-basin-highlands",
+        "kisumu": "lake-basin-highlands",
+        "homa-bay": "lake-basin-highlands",
+        "migori": "lake-basin-highlands",
+        "kisii": "lake-basin-highlands",
+        "nyamira": "lake-basin-highlands",
+    };
+    const layoutImages = {
+        drip: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Drip_Irrigation.svg/1280px-Drip_Irrigation.svg.png",
+        sprinkler: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Irrigation_Sprinkler_diagram.svg/1280px-Irrigation_Sprinkler_diagram.svg.png",
+        furrow: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Furrow_Irrigation_Diagram.svg/1280px-Furrow_Irrigation_Diagram.svg.png"
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const cropSelect = document.getElementById("crop");
+        const countySelect = document.getElementById("county");
+        const stageSelect = document.getElementById("stage");
+        const sortedCropNames = Object.keys(cropData).sort();
+        sortedCropNames.forEach(cropKey => {
+            const option = document.createElement("option");
+            option.value = cropKey;
+            option.textContent = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+            cropSelect.appendChild(option);
+        });
+        const sortedCountyNames = Object.keys(countyToRegionMap).sort();
+        sortedCountyNames.forEach(countyKey => {
+            const option = document.createElement("option");
+            option.value = countyKey;
+            option.textContent = countyKey.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            countySelect.appendChild(option);
+        });
+        const stages = ["early", "mid", "late"];
+        stageSelect.innerHTML = '<option value="">-- Choose Stage --</option>';
+        stages.forEach(stageKey => {
+            const option = document.createElement("option");
+            option.value = stageKey;
+            option.textContent = stageKey.charAt(0).toUpperCase() + stageKey.slice(1);
+            stageSelect.appendChild(option);
+        });
+
+        document.getElementById("irrigationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const selectedCounty = document.getElementById("county").value.trim().toLowerCase();
+            const crop = document.getElementById("crop").value.trim().toLowerCase();
+            const stage = document.getElementById("stage").value.trim().toLowerCase();
+            const area = parseFloat(document.getElementById("area").value);
+            const region = countyToRegionMap[selectedCounty];
+
+            if (!selectedCounty || !crop || !stage || isNaN(area) || area <= 0) {
+                alert("Please fill in all fields correctly and ensure area is a positive number.");
+                return;
+            }
+            const cropInfo = cropData[crop];
+            const regionFactor = regionClimateFactors[region];
+            const stageFactor = cropInfo && cropInfo.stages ? cropInfo.stages[stage] : undefined;
+
+            if (!cropInfo) {
+                alert("Crop data not found for the selected crop. Please select another.");
+                return;
+            }
+
+            if (region === undefined || typeof regionFactor === 'undefined') {
+                alert(`Climate data not available for the inferred region '${region}' (derived from '${selectedCounty}'). This is an internal configuration error. Please ensure '${selectedCounty}' is correctly mapped to a valid region and that region has a climate factor. Contact support if the issue persists.`);
+                console.error(`Missing region factor for key: '${region}' from county: '${selectedCounty}'`);
+                return;
+            }
+
+            if (typeof stageFactor === 'undefined') {
+                alert("Growth stage data not available for this crop or stage. Please choose another.");
+                return;
+            }
+
+            const water = (cropInfo.waterPerDay * stageFactor * regionFactor) * area;
+            const costPerLiterKES = waterTariffs[region] || waterTariffs["default"];
+            const dailyCost = (water * costPerLiterKES).toFixed(2);
+            const layout = cropInfo.layout;
+            const tip = cropInfo.tip;
+            const layoutURL = layoutImages[layout];
+            const displayCounty = selectedCounty.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            const displayRegion = region.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            const displayCrop = crop.charAt(0).toUpperCase() + crop.slice(1);
+            const displayStage = stage.charAt(0).toUpperCase() + stage.slice(1);
+
+
+            document.getElementById("result").innerHTML = `
+                <h3>Irrigation Plan for ${displayCrop}</h3>
+                <p><strong>County:</strong> ${displayCounty}</p>
+                <p><strong>Inferred Region:</strong> ${displayRegion}</p>
+                <p><strong>Growth Stage:</strong> ${displayStage}</p>
+                <p><strong>Recommended System:</strong> ${layout.toUpperCase()}</p>
+                <p><strong>Estimated Daily Water Need:</strong> ${water.toFixed(0)} liters (adjusted for ${displayCounty} climate and ${displayStage} stage)</p>
+                <p><strong>Estimated Daily Cost:</strong> KES ${dailyCost}</p>
+                <p><strong>Irrigation Tip:</strong> ${tip}</p>
+                <p><strong>Sample Layout:</strong></p>
+                <img src="${layoutURL}" alt="${layout} layout" class="layout-img">
+                <p class="disclaimer">Note: Water costs are estimates and can vary based on your specific water provider's tariffs and consumption tiers. Consult your local water bill for actual rates.</p>
+            `;
+        });
+
+        window.toggleMenu = function() {
+            document.getElementById('sideMenu').classList.toggle('open');
+        };
+
+        const isLoggedIn = localStorage.getItem("isAuthenticated");
+        if (!isLoggedIn) {
+            alert("You must be logged in to view this page.");
+            window.location.href = "auth.html";
+        }
+    });
+</script>

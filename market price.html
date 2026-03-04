@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Price Tracker - Farm Wisdom</title>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+   select, input[type="text"], input[type="email"], input[type="tel"] {
+  transition: all 0.3s ease;
+  background-color: #fefdf5;
+}
+select:focus, input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 4px rgba(255, 191, 0, 0.6);
+  outline: none;
+}  
+    :root {
+      --primary-color: #2C5F2D;
+      --accent-color: #FFBF00;
+      --bg-light: #fefdf5;
+      --card-bg: #ffffff;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+    }
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    h2 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    select, input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+    }
+    .ts-control {
+  min-height: 44px;
+  border-radius: 6px;
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+    button {
+      margin-top: 20px;
+      background-color: #f39c12;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #d35400;
+    }
+    #priceResult {
+      margin-top: 30px;
+      background: #fff8e1;
+      padding: 1rem;
+      border-left: 5px solid #f39c12;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+ <script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html" class="active">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Market Price Tracker + Alerts
+  </header>
+
+  <main>
+    <h2>Check Current Crop Prices</h2>
+    <form id="priceForm">
+    <div>
+        <label for="month">Month</label>
+        <select id="month" name="month">
+           <option value="" selected disabled>Select a month...</option>
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="crop">Select Crop</label>
+        <select id="crop" name="crop"></select> </div>
+     <div>
+       <label for="location">Enter Your County</label>
+       <select id="location" name="location" placeholder="Search or select a county..."></select>
+</div>
+
+    <div>
+        <label for="email">Email for Price Alerts (optional)</label>
+        <input type="email" id="email" name="email" placeholder="e.g., farmer@gmail.com">
+    </div>
+
+    <div>
+        <label for="phone">Phone (for SMS Alerts)</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g., +2547XXXXXXXX, ...">
+    </div>
+
+    <div>
+        <input type="number" value="90">
+        <button type="submit">Calculate Market Value</button>
+    </div>
+
+    <div id="priceResult">
+        </div>
+</form>
+  </main>
+
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('open');
+    }
+
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+      }
+    }
+
+    const crops = [
+    "Maize", "Beans", "Tomatoes", "Onions", "Milk", "Cabbages", "Potatoes", "Kales", "Spinach", "Bananas",
+    "Watermelon", "Sugarcane", "Coffee", "Tea", "Avocado", "Mangoes", "Pineapples", "Strawberries",
+    "Peas", "Groundnuts", "Pawpaw", "Carrots", "Sweet Potatoes", "Oranges", "Passion Fruit", "Green Grams",
+    "Lettuce", "Broccoli", "Zucchini", "Ginger", "Garlic", "Coriander", "Turmeric", "Pumpkin", "Coconut",
+    "Sorghum", "Millet", "Arrowroot", "Cassava", "Beetroot", "Chili", "Eggplant", "Lime", "Lemon", "Macadamia",
+    "Pear", "Dates", "Barley", "Vanilla", "Peanuts", "Okra", "Radish", "Celery", "Basil", "Parsley",
+    "Mustard Greens", "Turnips", "Artichoke", "Cranberries", "Tangerines", "Fig", "Mulberry", "Guava", "Rhubarb"
+];
+
+const counties = [
+    "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", "Garissa", "Homa Bay",
+    "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu",
+    "Kitui", "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera", "Marsabit", "Meru",
+    "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua",
+    "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi", "Trans Nzoia",
+    "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
+const basePrices = {
+    "Maize": 65, "Beans": 150, "Tomatoes": 90, "Onions": 120, "Milk": 80, "Cabbages": 50,
+    "Potatoes": 70, "Kales": 45, "Spinach": 55, "Bananas": 85, "Watermelon": 60, "Sugarcane": 40,
+    "Coffee": 110, "Tea": 95, "Avocado": 100, "Mangoes": 130, "Pineapples": 100, "Strawberries": 450,
+    "Peas": 180, "Groundnuts": 250, "Pawpaw": 75, "Carrots": 80, "Sweet Potatoes": 60, "Oranges": 110,
+    "Passion Fruit": 220, "Green Grams": 160, "Lettuce": 150, "Broccoli": 350, "Zucchini": 120,
+    "Ginger": 400, "Garlic": 350, "Coriander": 300, "Turmeric": 500, "Pumpkin": 40, "Coconut": 90,
+    "Sorghum": 80, "Millet": 90, "Arrowroot": 150, "Cassava": 70, "Beetroot": 110, "Chili": 300,
+    "Eggplant": 80, "Lime": 120, "Lemon": 130, "Macadamia": 800, "Pear": 250, "Dates": 600,
+    "Barley": 75, "Vanilla": 25000, "Peanuts": 240, "Okra": 100, "Radish": 90, "Celery": 180,
+    "Basil": 400, "Parsley": 350, "Mustard Greens": 60, "Turnips": 70, "Artichoke": 450,
+    "Cranberries": 1200, "Tangerines": 140, "Fig": 700, "Mulberry": 550, "Guava": 150, "Rhubarb": 200,
+    "default": 100
+};
+
+const countyFactors = {
+    agricultural: ["Nakuru", "Uasin Gishu", "Trans Nzoia", "Kericho", "Nandi", "Bungoma", "Meru", "Nyandarua", "Kirinyaga", "Kakamega", "Kisii", "Nyamira", "Homa Bay", "Siaya", "Busia", "Migori", "Narok", "Bomet", "Baringo", "Elgeyo-Marakwet", "Tharaka-Nithi", "Embu", "Kitui", "Makueni", "Machakos", "Kajiado", "Taita Taveta", "Kwale", "Kilifi", "Murang'a", "Nyeri", "Laikipia", "West Pokot"],
+    urban: ["Nairobi", "Mombasa", "Kisumu"],
+    remote: ["Turkana", "Mandera", "Wajir", "Garissa", "Marsabit", "Isiolo", "Tana River", "Lamu", "Samburu"],
+};
+
+const monthlyPriceTrends = {
+    "Maize":          [1.05, 1.03, 1.00, 0.98, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.08, 1.07],
+    "Beans":          [1.08, 1.05, 1.00, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.10, 1.12, 1.10],
+    "Tomatoes":       [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Onions":         [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.05, 1.00, 0.95, 0.90, 0.92],
+    "Milk":           [0.98, 1.00, 1.02, 1.05, 1.03, 1.00, 0.98, 0.95, 0.98, 1.00, 1.02, 1.00],
+    "Cabbages":       [1.00, 1.02, 1.05, 1.08, 1.10, 1.05, 1.00, 0.95, 0.90, 0.92, 0.95, 0.98],
+    "Potatoes":       [1.05, 1.00, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.08, 1.10, 1.07, 1.02],
+    "Kales":          [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Spinach":        [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Bananas":        [0.98, 0.95, 0.90, 0.92, 0.95, 1.00, 1.05, 1.08, 1.10, 1.05, 1.00, 0.98],
+    "Watermelon":     [1.10, 1.05, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20],
+    "Sugarcane":      [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Coffee":         [1.05, 1.00, 0.95, 0.90, 0.92, 0.95, 1.00, 1.05, 1.10, 1.15, 1.12, 1.08],
+    "Tea":            [0.98, 1.00, 1.02, 1.05, 1.03, 1.00, 0.98, 0.95, 0.98, 1.00, 1.02, 1.00],
+    "Avocado":        [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Mangoes":        [0.80, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.05, 0.90],
+    "Pineapples":     [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Strawberries":   [1.05, 1.00, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10, 1.05],
+    "Peas":           [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Groundnuts":     [1.02, 1.00, 0.98, 0.95, 0.90, 0.95, 1.00, 1.05, 1.08, 1.10, 1.07, 1.05],
+    "Pawpaw":         [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Carrots":        [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Sweet Potatoes": [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.12, 1.08],
+    "Oranges":        [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Passion Fruit":  [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Green Grams":    [1.08, 1.05, 1.00, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.10, 1.12, 1.10],
+    "Lettuce":        [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Broccoli":       [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Zucchini":       [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Ginger":         [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Garlic":         [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Coriander":      [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Turmeric":       [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Pumpkin":        [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Coconut":        [0.98, 1.00, 1.02, 1.05, 1.03, 1.00, 0.98, 0.95, 0.98, 1.00, 1.02, 1.00],
+    "Sorghum":        [1.05, 1.03, 1.00, 0.98, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.08, 1.07],
+    "Millet":         [1.05, 1.03, 1.00, 0.98, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.08, 1.07],
+    "Arrowroot":      [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Cassava":        [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Beetroot":       [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Chili":          [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Eggplant":       [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Lime":           [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Lemon":          [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Macadamia":      [1.05, 1.00, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10, 1.05],
+    "Pear":           [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Dates":          [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Barley":         [1.05, 1.03, 1.00, 0.98, 0.95, 0.90, 0.90, 0.95, 1.00, 1.05, 1.08, 1.07],
+    "Vanilla":        [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Peanuts":        [1.02, 1.00, 0.98, 0.95, 0.90, 0.95, 1.00, 1.05, 1.08, 1.10, 1.07, 1.05],
+    "Okra":           [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Radish":         [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Celery":         [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Basil":          [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Parsley":        [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Mustard Greens": [0.95, 0.98, 1.00, 1.02, 1.05, 1.08, 1.10, 1.08, 1.05, 1.00, 0.98, 0.95],
+    "Turnips":        [1.00, 1.02, 1.05, 1.08, 1.10, 1.05, 1.00, 0.95, 0.90, 0.92, 0.95, 0.98],
+    "Artichoke":      [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "Cranberries":    [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00],
+    "Tangerines":     [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Fig":            [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Mulberry":       [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Guava":          [0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.15, 1.10, 1.05, 0.95, 0.90],
+    "Rhubarb":        [1.05, 1.00, 0.95, 0.90, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.10],
+    "default":        [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00]
+};
+
+
+function getRealisticMonthlyPrices(crop, county) {
+    let countyMultiplier = 1.0;
+
+    if (countyFactors.agricultural.includes(county)) {
+        countyMultiplier = 0.85;
+    } else if (countyFactors.urban.includes(county)) {
+        countyMultiplier = 1.20;
+    } else if (countyFactors.remote.includes(county)) {
+        countyMultiplier = 1.40;
+    }
+
+    const basePrice = basePrices[crop] || basePrices["default"];
+    const monthlyTrends = monthlyPriceTrends[crop] || monthlyPriceTrends["default"];
+    const prices = [];
+
+    for (let i = 0; i < 12; i++) {
+        const fluctuation = 1 + (Math.random() - 0.5) * 0.1;
+        let finalPrice = basePrice * countyMultiplier * monthlyTrends[i] * fluctuation;
+        prices.push(Math.round(finalPrice));
+    }
+    return prices;
+}
+
+const cropPrices = {};
+
+counties.forEach(county => {
+    cropPrices[county] = {};
+    crops.forEach(crop => {
+        cropPrices[county][crop] = getRealisticMonthlyPrices(crop, county);
+    });
+});
+
+    new TomSelect("#crop", {
+      options: crops.map(c => ({ value: c, text: c })),
+      placeholder: "Search or select a crop...",
+      create: false,
+      sortField: { field: "text", direction: "asc" }
+    });
+
+   new TomSelect("#location", {
+  options: counties.map(c => ({ value: c, text: c })),
+  placeholder: "Search or select a county...",
+  create: false,
+  maxItems: 1,
+  allowEmptyOption: true,
+  sortField: { field: "text", direction: "asc" }
+});
+
+    new TomSelect("#month", {
+      placeholder: "Select a month...",
+      create: false,
+      sortField: { field: "text", direction: "asc" }
+    });
+
+    document.getElementById("priceForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const crop = document.getElementById("crop").value;
+      const location = document.getElementById("location").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (!crop || !location) {
+        alert("Please select a crop and a county.");
+        return;
+      }
+
+      const today = new Date();
+      const currentMonth = today.getMonth();
+
+      const countyCropPrices = cropPrices[location];
+      let message = "";
+
+      if (countyCropPrices && countyCropPrices[crop]) {
+        const pricesForYear = countyCropPrices[crop];
+        const currentPrice = pricesForYear[currentMonth];
+
+        let monthlyPricesHtml = "<h4>Monthly Prices (KES/kg):</h4><ul style='list-style-type: none; padding: 0;'>";
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        pricesForYear.forEach((price, index) => {
+            const isCurrentMonth = index === currentMonth ? "style='font-weight: bold; color: #0056b3;'" : "";
+            monthlyPricesHtml += `<li ${isCurrentMonth}>${monthNames[index]}: KES ${price}</li>`;
+        });
+        monthlyPricesHtml += "</ul>";
+
+
+        message = `<h3>${crop} in ${location}:</h3><p>Current Price (<strong>${monthNames[currentMonth]}</strong>): <strong>KES ${currentPrice} / kg</strong></p>${monthlyPricesHtml}`;
+
+
+        if (currentPrice > (basePrices[crop] || basePrices["default"]) * 1.1) {
+          message += `<p style='color: green'><strong>Good time to sell! Price is currently high.</strong></p>`;
+          if (phone) {
+            await fetch("http://localhost:3000/send-alert", {
+              method: "POST",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                phone: phone,
+                message: `Farm Wisdom: ${crop} price is now KES ${currentPrice} in ${location}. Great time to sell!`
+              })
+            });
+          }
+        } else if (currentPrice < (basePrices[crop] || basePrices["default"]) * 0.8) {
+          message += `<p style='color: red'><strong>Very low price - avoid selling now.</strong></p>`;
+        } else {
+          message += `<p style='color: orange'><strong>Consider waiting or storing.</strong></p>`;
+        }
+
+        if (email) {
+          message += `<p>We’ll notify <strong>${email}</strong> if significant price changes occur!</p>`;
+        }
+      } else {
+        message = `<p>No data found for ${crop} in ${location}. Please ensure both are correctly selected.</p>`;
+      }
+
+      document.getElementById("priceResult").innerHTML = message;
+    });
+  </script>
+</body>
+</html>

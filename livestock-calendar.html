@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livestock Breeding Calendar - Farm Wisdom</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #2C5F2D;
+      --secondary-color: #97A97C;
+      --background-color: #F7F6F2;
+      --text-color: #333333;
+      --card-bg-color: #FFFFFF;
+      --accent-color: #FFBF00;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--box-shadow);
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      text-align: center;
+    }
+    .card {
+      background-color: var(--card-bg-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #1A431A;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+      color: #555;
+    }
+    #calendar-results {
+      display: none;
+      margin-top: 20px;
+    }
+    .timeline {
+      list-style: none;
+      padding: 0;
+    }
+    .timeline-item {
+      position: relative;
+      padding: 10px 0 20px 30px;
+      border-left: 2px solid var(--secondary-color);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -11px;
+      top: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      border: 2px solid white;
+    }
+    .timeline-date {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    .timeline-event {
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html" class="active">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Livestock Breeding Calendar
+  </header>
+
+  <main class="container">
+    <h1>Livestock Breeding Calendar</h1>
+    <div class="card">
+      <h2>Track Important Breeding Dates</h2>
+      <form id="breeding-form">
+        <div class="form-group">
+       <label for="animal-photo">Upload Animal Photo (Optional)</label>
+       <input type="file" id="animal-photo" accept="image/*" class="form-control">
+       </div>
+        <div class="form-group">
+          <label for="animal-type">Select Animal:</label>
+          <select id="animal-type" class="form-control">
+            <option value="cow">Cow (Ng'ombe)</option>
+            <option value="goat">Goat (Mbuzi)</option>
+            <option value="sheep">Sheep (Kondoo)</option>
+            <option value="pig">Pig (Nguruwe)</option>
+            <option value="camel">Camel(Ngamia)</option>
+            <option value="horse">Horse(Farasi)</option>
+            <option value="chicken">Chicken (Kuku)</option>
+            <option value="rabbit">Rabbit (Sungura)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="service-date">Date of Service / Insemination:</label>
+          <input type="date" id="service-date" class="form-control" required>
+        </div>
+        <label for="contact">Contact Email (for reminders)</label>
+      <input type="email" id="contact" placeholder="your@email.com">
+        <div class="form-group">
+         <label><input type="checkbox" id="set-reminder"> Set Reminder</label>
+          </div>
+
+        <button type="submit" class="btn">Generate Breeding Schedule</button>
+      </form>
+    </div>
+      <div style="text-align:center; margin-top: 10px;">
+        <button class="btn" onclick="exportToPDF()">Export to PDF</button>
+        <button class="btn" onclick="exportToExcel()">Export to Excel</button>
+    </div>
+
+    <div class="card" id="calendar-results">
+      <h2>Breeding Timeline for Your <span id="result-animal-name"></span></h2>
+      <ul class="timeline" id="timeline-list"></ul>
+    </div>
+    <div class="card">
+  <h2>Breeding Tips</h2>
+  <ul>
+    <li>Monitor animals for heat signs (swelling, restlessness).</li>
+    <li>Ensure proper nutrition before and after insemination.</li>
+    <li>Schedule vet check-ups 60 days post-breeding.</li>
+    <li>Keep detailed health and pregnancy records.</li>
+  </ul>
+</div>
+<div class="card">
+  <h2>Health Records</h2>
+  <label for="health-note">Add Note:</label>
+  <input type="text" id="health-note" placeholder="e.g., Dewormed on July 5, 2025" class="form-control">
+  <button onclick="addHealthNote()" class="btn">Add Note</button>
+  <ul id="health-list"></ul>
+</div>
+<div class="card">
+  <h2>Progress Tracker</h2>
+  <progress id="pregnancy-progress" value="0" max="100" style="width: 100%;"></progress>
+  <p id="progress-label">Progress: 0%</p>
+</div>
+
+
+    <div id="livestock-result"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Farm Wisdom. All Rights Reserved. @JoeDevs</p>
+  </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+function exportToPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("Breeding Timeline", 10, 10);
+  const items = document.querySelectorAll('.timeline-item');
+  let y = 20;
+  items.forEach(item => {
+    const date = item.querySelector('.timeline-date').textContent;
+    const event = item.querySelector('.timeline-event').textContent;
+    doc.text(`${date}: ${event}`, 10, y);
+    y += 10;
+  });
+  doc.save('breeding_schedule.pdf');
+}
+
+function exportToExcel() {
+  const items = document.querySelectorAll('.timeline-item');
+  const data = [["Date", "Event"]];
+  items.forEach(item => {
+    const date = item.querySelector('.timeline-date').textContent;
+    const event = item.querySelector('.timeline-event').textContent;
+    data.push([date, event]);
+  });
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Schedule");
+  XLSX.writeFile(workbook, "breeding_schedule.xlsx");
+}
+const today = new Date();
+const dueDate = new Date(serviceDate);
+dueDate.setDate(dueDate.getDate() + selectedAnimal.gestation);
+const totalDays = selectedAnimal.gestation;
+const elapsed = Math.min(Math.floor((today - serviceDate) / (1000 * 60 * 60 * 24)), totalDays);
+const progress = Math.floor((elapsed / totalDays) * 100);
+document.getElementById('pregnancy-progress').value = progress;
+document.getElementById('progress-label').textContent = `Progress: ${progress}%`;
+
+</script>
+  <script>
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('open');
+    }
+
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+      }
+    }
+
+    document.getElementById('breeding-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const animalData = {
+        cow: {
+          name: 'Cow', gestation: 283, events: [
+            { days: 21, event: "First Return to Heat (if not pregnant)" },
+            { days: 60, event: "Pregnancy Confirmation (by Vet)" },
+            { days: 223, event: "Dry Off Period Begins (stop milking)" },
+            { days: 283, event: "Estimated Due Date (Calving)" }
+          ]
+        },
+        goat: {
+          name: 'Goat', gestation: 150, events: [
+            { days: 21, event: "Return to Heat (if not pregnant)" },
+            { days: 150, event: "Estimated Due Date (Kidding)" }
+          ]
+        },
+        sheep: {
+          name: 'Sheep', gestation: 147, events: [
+            { days: 17, event: "Return to Heat (if not pregnant)" },
+            { days: 147, event: "Estimated Due Date (Lambing)" }
+          ]
+        },
+        pig: {
+          name: 'Pig', gestation: 114, events: [
+            { days: 110, event: "Prepare Farrowing Pen" },
+            { days: 114, event: "Estimated Due Date (Farrowing)" }
+          ]
+        },
+      
+          camel: {
+          name: 'Camel', gestation: 390, events: [
+            { days: 390, event: "Estimated Due Date (Calving)" }
+          ]
+        },
+          horse: {
+          name: 'Horse', gestation: 340, events: [
+            { days: 340, event: "Estimated Due Date (Foaling)" }
+          ]
+        },
+          chicken: {
+          name: 'Chicken', gestation: 21, events: [
+           { days: 1, event: "Start Incubation" },
+           { days: 21, event: "Hatching Day" }
+          ]
+        },
+          rabbit: {
+          name: 'Rabbit', gestation: 31, events: [
+           { days: 31, event: "Estimated Due Date (Kindling)" }
+          ]
+       }
+     };
+     const animalType = document.getElementById('animal-type').value;
+      const serviceDateStr = document.getElementById('service-date').value;
+      if (!serviceDateStr) {
+        alert("Please select a service date.");
+        return;
+      }
+
+      const serviceDate = new Date(serviceDateStr);
+      const selectedAnimal = animalData[animalType];
+
+      const timelineList = document.getElementById('timeline-list');
+      timelineList.innerHTML = '';
+
+      selectedAnimal.events.forEach(eventData => {
+        const eventDate = new Date(serviceDate);
+        eventDate.setDate(eventDate.getDate() + eventData.days);
+
+        const li = document.createElement('li');
+        li.className = 'timeline-item';
+        li.innerHTML = `
+          <div class="timeline-date">${eventDate.toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          <div class="timeline-event">${eventData.event}</div>
+        `;
+        timelineList.appendChild(li);
+      });
+
+      document.getElementById('result-animal-name').textContent = selectedAnimal.name;
+      const resultsCard = document.getElementById('calendar-results');
+      resultsCard.style.display = 'block';
+      resultsCard.scrollIntoView({ behavior: 'smooth' });
+    });
+    const photoInput = document.getElementById('animal-photo');
+if (photoInput.files.length > 0) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    img.style.maxWidth = '200px';
+    img.style.marginTop = '10px';
+    document.getElementById('livestock-result').innerHTML = '';
+    document.getElementById('livestock-result').appendChild(img);
+  };
+  reader.readAsDataURL(photoInput.files[0]);
+}
+    if (document.getElementById('set-reminder').checked) {
+  const email = document.getElementById('contact').value;
+  localStorage.setItem("breedingReminder", JSON.stringify({
+    animal: selectedAnimal.name,
+    serviceDate: serviceDateStr,
+    contact: email
+  }));
+  alert("Reminder saved! We'll remind you via browser/email (feature mockup).");
+}
+function addHealthNote() {
+  const note = document.getElementById('health-note').value;
+  if (note) {
+    const li = document.createElement('li');
+    li.textContent = note;
+    document.getElementById('health-list').appendChild(li);
+    document.getElementById('health-note').value = '';
+  }
+}
+  </script>
+</body>
+</html>

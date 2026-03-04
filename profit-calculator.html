@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profitability Calculator - Farm Wisdom</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #2C5F2D;
+      --bg-light: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --border-radius: 12px;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--bg-light);
+      color: #333;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+      z-index: 1001;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+    }
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    h1, h2 {
+      color: var(--primary-color);
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    .btn {
+      display: block;
+      background: var(--primary-color);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      padding: 12px 25px;
+      margin: 20px auto;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #1A431A;
+    }
+    #results-card {
+      display: none;
+      background-color: #E8F5E9;
+      border-left: 5px solid var(--primary-color);
+      margin-top: 20px;
+    }
+    .result-item {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .result-item span:first-child {
+      font-weight: 600;
+    }
+    .result-item.profit {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f2f2f2;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html" class="active">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Profitability Calculator
+  </header>
+  <main>
+    <h1>Profitability Calculator</h1>
+    <p style="text-align:center">Estimate your revenue, costs, and profit before investing in your farming venture.</p>
+    <form id="profit-form">
+      <div class="calculator-grid">
+        <div class="card">
+          <h2>Projected Revenue</h2>
+          <div class="form-group">
+            <label for="venture-name">Venture Name</label>
+            <input type="text" id="venture-name" placeholder="e.g., Dairy Goats (10 does)" required />
+          </div>
+          <div class="form-group">
+            <label for="units">Units</label>
+            <input type="number" id="units" placeholder="e.g., 10" required />
+          </div>
+          <div class="form-group">
+            <label for="price-per-unit">Price per Unit (Ksh)</label>
+            <input type="number" id="price-per-unit" placeholder="e.g., 12000" required />
+          </div>
+        </div>
+        <div class="card">
+          <h2>Projected Costs</h2>
+          <div class="form-group">
+            <label for="cost-setup">Setup</label>
+            <input type="number" id="cost-setup" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="cost-inputs">Inputs</label>
+            <input type="number" id="cost-inputs" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="cost-feed">Feed</label>
+            <input type="number" id="cost-feed" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="cost-vet">Vet</label>
+            <input type="number" id="cost-vet" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="cost-labor">Labor</label>
+            <input type="number" id="cost-labor" value="0" />
+          </div>
+          <div class="form-group">
+            <label for="cost-other">Other</label>
+            <input type="number" id="cost-other" value="0" />
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn">Calculate Profit</button>
+    </form>
+    <div class="card" id="results-card">
+      <h2>Profit Forecast: <span id="result-venture-name"></span></h2>
+      <div id="results-content"></div>
+    </div>
+  </main>
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+  </footer>
+  <script>
+    function toggleMenu() {
+      document.getElementById('sideMenu').classList.toggle('open');
+    }
+
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+      }
+    }
+
+    document.getElementById('profit-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('venture-name').value;
+      const units = parseFloat(document.getElementById('units').value) || 0;
+      const price = parseFloat(document.getElementById('price-per-unit').value) || 0;
+      const revenue = units * price;
+
+      const costs = [
+        'cost-setup', 'cost-inputs', 'cost-feed', 'cost-vet', 'cost-labor', 'cost-other'
+      ].map(id => parseFloat(document.getElementById(id).value) || 0)
+      .reduce((a, b) => a + b, 0);
+
+      const profit = revenue - costs;
+      const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+      document.getElementById('result-venture-name').textContent = name;
+      document.getElementById('results-content').innerHTML = `
+        <div class="result-item"><span>Total Revenue:</span><span>Ksh ${revenue.toLocaleString()}</span></div>
+        <hr>
+        <div class="result-item"><span>Total Costs:</span><span>Ksh ${costs.toLocaleString()}</span></div>
+        <hr>
+        <div class="result-item profit"><span>Net Profit:</span><span>Ksh ${profit.toLocaleString()}</span></div>
+        <hr>
+        <div class="result-item"><span>Profit Margin:</span><span>${margin.toFixed(1)}%</span></div>
+      `;
+      document.getElementById('results-card').style.display = 'block';
+      document.getElementById('results-card').scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Wisdom</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <style>
+   
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+
+    header.header-top-bar {
+      padding-left: 60px;
+      position: relative;
+      z-index: 900;
+    }
+
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+<script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div> 
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html" class="active">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header class="header-top-bar">
+    <div>🌾🚜<span class="logo-text">Farm Wisdom</span>🐄🌱</div>
+    <nav>
+      <div class="nav-links">
+        <a href="#location-section">Location</a>
+        <a href="#market-section">Market</a>
+        <a href="#identifier-section">Identifier</a>
+        <a href="#feedback-section">Feedback</a>
+      </div>
+      <div id="profile-container" style="display: none;">
+        <div id="profile-icon">👤 ▼</div>
+        <div id="profile-menu">
+          <p id="welcomeMessage">Welcome, User</p>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section id="location-section">
+      <h2>Your Location & Weather</h2>
+      <label for="county-selector">Select Your County:</label>
+      <select id="county-selector">
+        <option value="">-- Choose a county --</option>
+      </select>
+      <div id="location-display">
+        <p>Weather: <strong id="weather-report">25°C, Partly Cloudy</strong></p>
+      </div>
+      <p>Based on your selected location, here are some suitable crops:</p>
+      <ul id="crop-suggestions"></ul>
+    </section>
+
+    <section id="market-section">
+      <h2 style="color: green;">Market Trends: Prices (KES)</h2>
+      <label for="crop-select">Select crop:</label>
+      <select id="crop-select" size="2">
+        <option value="maize">Maize</option>
+      <option value="beans">Beans</option>
+                <option value="potatoes">Potatoes</option>
+                <option value="milk">Milk</option>
+                <option value="strawberries">Strawberries</option>
+                <option value="apples">Apples</option>
+                <option value="cabbages">Cabbages</option>
+                <option value="onions">Onions</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="kales">Kales</option>
+                <option value="spinach">Spinach</option>
+                <option value="pineapples">Pineapples</option>
+                <option value="oranges">Oranges</option>
+                <option value="sugarcane">Sugarcane</option>
+                <option value="watermelon">Watermelon</option>
+                <option value="bananas">Bananas</option>
+                <option value="pears">Pears</option>
+                <option value="avocado">Avocado</option>
+                <option value="peas">Peas</option>
+                <option value="passionfruit">Passion Fruit</option>
+                <option value="groundnuts">Groundnuts</option>
+                <option value="pawpaw">Pawpaw</option>
+                <option value="sweetpotatoes">Sweet Potatoes</option>
+                <option value="tea">Tea</option>
+                <option value="coffee">Coffee</option>
+                <option value="greengrams">Green Grams</option>
+                <option value="mangoes">Mangoes</option>
+                <option value="carrots">Carrots</option> 
+      </select>
+      <div id="market-chart"></div>
+    </section>
+
+    <section id="identifier-section">
+      <h2>Pest & Disease Identifier</h2>
+      <form id="pest-form">
+        <input type="text" id="symptom-input" placeholder="Enter symptoms here..." required>
+        <button type="submit">Diagnose</button>
+      </form>
+      <div id="diagnosis-result"></div>
+    </section>
+
+    <section id="feedback-section">
+      <h2>Connect with Fellow Farmers</h2>
+      <form id="community-form">
+        <label for="username">Your Name:</label>
+        <input type="text" id="username" required>
+        <label for="message">Share your experiences or ask questions:</label>
+        <textarea id="message" rows="4"></textarea>
+        <button type="submit">Post</button>
+      </form>
+      <div id="community-feed"></div>
+    </section>
+  </main>
+
+ 
+  <div id="chatbot-container">
+    <div id="chatbot-header">
+      <h4>FarmBot Assistant</h4>
+      <button id="close-chatbot">&times;</button>
+    </div>
+    <div id="chatbot-body">
+      <div class="bot-message">Hello! I am FarmBot, a highly advanced agricultural AI. How can I assist you today?</div>
+    </div>
+    <div id="chatbot-input-container">
+      <input type="text" id="chatbot-input" placeholder="Ask me anything...">
+      <button id="send-btn">➤</button>
+    </div>
+  </div>
+  <button id="chatbot-toggler">💬</button>
+
+  <div id="guide-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer><p>&copy; 2025 Farm Wisdom. All Rights Reserved. @JoeDevs</p></footer>
+
+ 
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  <script>
+    function toggleMenu() {
+      document.getElementById("sideMenu").classList.toggle("open");
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      new TomSelect('#county-selector', {
+        create: false,
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Search or select a county..."
+      });
+
+      new TomSelect('#crop-select', {
+        create: false,
+        sortField: { field: "text", direction: "asc" },
+        placeholder: "Search or select a crop..."
+      });
+    });
+  </script>
+</body>
+</html>

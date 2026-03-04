@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Farm Wisdom - Nearby Services Locator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f4fefc;
+    }
+
+    header, footer {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    main {
+      padding: 1rem;
+      max-width: 960px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    #map {
+      width: 100%;
+      height: 500px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .info {
+      margin-top: 15px;
+      background: #ecf9f1;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+  </style>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGZcbHc8htHWdrZHEU2lCUwrI0OILJcVA&callback=initMap&libraries=places" async defer></script>
+</head>
+<body>
+<script src="mode.js"></script>
+  <div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+  <nav class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="market price.html">Market</a></li>
+      <li><a href="farm budget.html">Budget</a></li>
+      <li><a href="farm community forum.html">Community</a></li>
+      <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+      <li><a href="livestock-calendar.html">Breeding</a></li>
+      <li><a href="pest diseases.html">Identifier</a></li>
+      <li><a href="profit-calculator.html">Profit Calculator</a></li>
+      <li><a href="soil health.html">Soil Health</a></li>
+      <li><a href="weather.html">Weather</a></li>
+      <li><a href="agro locator.html" class="active">Agro Locator</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    🌾🚜Farm Wisdom🐄🌱 - Agrovet, Market & Officer Locator
+  </header>
+
+  <main>
+    <h2>Find Nearby Farming Resources</h2>
+    <div class="info">
+      <p>This tool helps you locate:</p>
+      <ul>
+        <li>Agrovet Shops</li>
+        <li>Local Produce Markets</li>
+        <li>Agriculture Extension Officers</li>
+      </ul>
+    </div>
+    <div class="info">
+  <label for="serviceType"><strong>Filter by Service Type:</strong></label>
+  <select id="serviceType">
+    <option value="hardware_store">Agrovet Shop</option>
+    <option value="veterinary_care">Vet Services</option>
+    <option value="grocery_or_supermarket">Local Market</option>
+  </select>
+  <button onclick="filterServices()"> Search Nearby</button>
+</div>
+
+    <div id="map"></div>
+  </main>
+
+  <footer>
+    &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs.
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("sideMenu").classList.toggle("open");
+    }
+
+    window.onload = function() {
+      const isLoggedIn = localStorage.getItem("isAuthenticated");
+      if (!isLoggedIn) {
+        alert("You must be logged in to view this page.");
+        window.location.href = "auth.html";
+      }
+    }
+
+    let map;
+    function initMap() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          map = new google.maps.Map(document.getElementById("map"), {
+            center: userLocation,
+            zoom: 13
+          });
+
+          new google.maps.Marker({
+            position: userLocation,
+            map,
+            title: "You are here"
+          });
+
+          const service = new google.maps.places.PlacesService(map);
+          const types = ["hardware_store", "veterinary_care", "grocery_or_supermarket"];
+          const labels = ["Agrovet Shop", "Extension Officer Clinic", "Local Market"];
+
+          types.forEach((type, i) => {
+            service.nearbySearch({
+              location: userLocation,
+              radius: 5000,
+              type: type
+            }, (results, status) => {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                results.forEach(place => {
+                  new google.maps.Marker({
+                    map,
+                    position: place.geometry.location,
+                    title: `${labels[i]}: ${place.name}`
+                  });
+                });
+              }
+            });
+          });
+
+        }, () => alert("Geolocation permission denied."));
+      } else {
+        alert("Geolocation not supported by your browser.");
+      }
+    }
+    function createCustomMarker(place, label) {
+  const marker = new google.maps.Marker({
+    map,
+    position: place.geometry.location,
+    title: `${label}: ${place.name}`
+  });
+
+  const phoneNumber = place.formatted_phone_number || "";
+  const rating = place.rating || "N/A";
+  const content = `
+    <strong>${place.name}</strong><br>
+     ${place.vicinity || ""}<br>
+     Rating: ${rating}<br>
+    ${phoneNumber ? ` <a href="tel:${phoneNumber}">Call</a> | <a href="https://wa.me/${phoneNumber.replace(/\D/g, '')}" target="_blank">WhatsApp</a><br>` : ""}
+    <button onclick="saveFavorite('${place.name}', '${place.vicinity || ""}')"> Save to Favorites</button>
+  `;
+
+  const infowindow = new google.maps.InfoWindow({ content });
+  marker.addListener("click", () => infowindow.open(map, marker));
+}
+function saveFavorite(name, location) {
+  const favs = JSON.parse(localStorage.getItem("agroFavorites") || "[]");
+  favs.push({ name, location });
+  localStorage.setItem("agroFavorites", JSON.stringify(favs));
+  alert(`${name} saved to favorites!`);
+}
+function filterServices() {
+  const type = document.getElementById("serviceType").value;
+  if (!navigator.geolocation) return alert("GPS not supported.");
+
+  navigator.geolocation.getCurrentPosition(position => {
+    const userLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+
+    map.setCenter(userLocation);
+    const service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+      location: userLocation,
+      radius: 5000,
+      type: type
+    }, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results.forEach(place => createCustomMarker(place, type));
+      }
+    });
+  });
+}
+
+  </script>
+</body>
+</html>

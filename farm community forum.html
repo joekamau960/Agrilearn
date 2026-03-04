@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farm Wisdom - Community Q&A</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f9f0;
+      margin: 0;
+      padding: 20px;
+    }
+     .container {
+      max-width: 960px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    header, footer {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .question {
+      background: #ecf9ec;
+      border-left: 4px solid #2ecc71;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 6px;
+    }
+    .reply {
+      background: #f4f4f4;
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border-left: 3px solid #ccc;
+    }
+    .stars {
+      color: gold;
+      font-size: 18px;
+      margin-left: 5px;
+    }
+    .menu-toggle-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+      background-color: #e0ffe0;
+      padding: 6px 12px;
+      border: 2px solid #2a5d2e;
+      border-radius: 6px;
+    }
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -200px;
+      width: 180px;
+      height: 100%;
+      background-color: #e0ffe0;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+      padding: 20px 10px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .side-menu.open {
+      left: 0;
+    }
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .side-menu li {
+      margin-bottom: 12px;
+    }
+    .side-menu a {
+      text-decoration: none;
+      color: #2a5d2e;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 10px;
+      display: block;
+      border-radius: 6px;
+    }
+    .side-menu a:hover {
+      background-color: #c0f0c0;
+    }
+    .post-form, .post {
+      margin-top: 20px;
+    }
+    .post-form input, .post-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .post-form button {
+      background: #2C5F2D;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .post {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .post img {
+      max-width: 100px;
+      display: block;
+      margin-top: 10px;
+    }
+    .vote-btn {
+      cursor: pointer;
+      color: #555;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+<script src="mode.js"></script>
+<div class="menu-toggle-btn" onclick="toggleMenu()">☰</div>
+<nav class="side-menu" id="sideMenu">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="market price.html">Market</a></li>
+    <li><a href="farm budget.html">Budget</a></li>
+    <li><a href="farm community forum.html" class="active">Community</a></li>
+    <li><a href="irrigation planner.html">Irrigation Plan</a></li>
+    <li><a href="livestock-calendar.html">Breeding</a></li>
+    <li><a href="pest diseases.html">Identifier</a></li>
+    <li><a href="profit-calculator.html">Profit Calculator</a></li>
+    <li><a href="soil health.html">Soil Health</a></li>
+    <li><a href="weather.html">Weather</a></li>
+    <li><a href="agro locator.html">Agro Locator</a></li>
+  </ul>
+</nav>
+
+<header>
+  🌾🚜Farm Wisdom🐄🌱 - Community Forum
+</header>
+<main>
+  <h2>Ask & Answer Farming Questions</h2>
+  <form id="qaForm">
+    <label for="username">Your Name</label>
+    <input type="text" id="username" placeholder="e.g., Joseph from Bungoma" required>
+
+    <label for="county">County (for local groups)</label>
+    <input type="text" id="county" placeholder="e.g., Kisii">
+
+    <label for="crop">Crop (optional)</label>
+    <input type="text" id="crop" placeholder="e.g., Avocado">
+
+    <label for="question">Your Question</label>
+    <textarea id="question" rows="3" placeholder="e.g., What’s the best organic pesticide for tomatoes?" required></textarea>
+
+    <button type="submit">Post Question</button>
+  </form>
+<input type="file" id="attachment">
+<input type="text" id="searchBox" placeholder="Search posts..." oninput="renderPosts()">
+<div>
+  <label for="sort">Sort by:</label>
+  <select id="sort" onchange="renderPosts()">
+    <option value="recent">Recent</option>
+    <option value="mostVoted">Most Answered</option>
+  </select>
+</div>
+<div id="forum"></div>
+
+  <div id="qaFeed"></div>
+</main>
+<footer>
+  &copy; 2025 Farm Wisdom. All rights reserved. @JoeDevs
+</footer>
+<script>
+  function toggleMenu() {
+    document.getElementById('sideMenu').classList.toggle('open');
+  }
+
+  window.onload = function() {
+    const isLoggedIn = localStorage.getItem("isAuthenticated");
+    if (!isLoggedIn) {
+      alert("You must be logged in to view this page.");
+      window.location.href = "auth.html";
+    }
+  }
+
+  const qaFeed = document.getElementById('qaFeed');
+  const form = document.getElementById('qaForm');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const user = document.getElementById('username').value;
+    const county = document.getElementById('county').value;
+    const crop = document.getElementById('crop').value;
+    const question = document.getElementById('question').value;
+
+    const post = document.createElement('div');
+    post.classList.add('question');
+    post.innerHTML = `
+      <strong>${user}</strong> <em>(${county || 'Unknown County'} | ${crop || 'General'})</em><br>
+      <p>${question}</p>
+      <label>Reply:</label>
+      <textarea rows="2" class="reply-input" placeholder="Write a helpful answer..."></textarea>
+      <button onclick="replyToQuestion(this)">Submit Reply</button>
+    `;
+
+    qaFeed.prepend(post);
+    form.reset();
+  });
+
+  function replyToQuestion(button) {
+    const input = button.previousElementSibling;
+    const replyText = input.value;
+    if (!replyText) return;
+
+    const replyDiv = document.createElement('div');
+    replyDiv.classList.add('reply');
+    replyDiv.innerHTML = `
+      <strong> Verified Farmer</strong>: ${replyText} <span class="stars">★</span>
+    `;
+    input.parentNode.appendChild(replyDiv);
+    input.remove();
+    button.remove();
+  }
+const forumData = JSON.parse(localStorage.getItem("forumData") || "[]");
+
+function postQuestion() {
+  const username = document.getElementById('username').value || 'Anonymous';
+  const question = document.getElementById('question').value;
+  const file = document.getElementById('attachment').files[0];
+  let fileURL = "";
+
+  if (!question.trim()) {
+    alert("Please enter a question.");
+    return;
+  }
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      fileURL = e.target.result;
+      savePost(username, question, fileURL);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    savePost(username, question, fileURL);
+  }
+
+  document.getElementById('username').value = "";
+  document.getElementById('question').value = "";
+  document.getElementById('attachment').value = null;
+}
+
+function savePost(username, question, fileURL) {
+  forumData.unshift({ username, question, fileURL, votes: 0, timestamp: Date.now() });
+  localStorage.setItem("forumData", JSON.stringify(forumData));
+  renderPosts();
+}
+
+function renderPosts() {
+  const container = document.getElementById("forum");
+  const searchTerm = document.getElementById("searchBox").value.toLowerCase();
+  const sortBy = document.getElementById("sort").value;
+
+  let sortedData = [...forumData];
+  if (sortBy === "mostVoted") {
+    sortedData.sort((a, b) => b.votes - a.votes);
+  } else {
+    sortedData.sort((a, b) => b.timestamp - a.timestamp);
+  }
+
+  container.innerHTML = "";
+  for (let post of sortedData) {
+    if (!post.question.toLowerCase().includes(searchTerm)) continue;
+
+    const div = document.createElement("div");
+    div.className = "post";
+    div.innerHTML = `
+      <p><strong>${post.username}</strong></p>
+      <p>${post.question}</p>
+      ${post.fileURL ? `<img src="${post.fileURL}" alt="attachment">` : ""}
+      <div>
+        <span class="vote-btn" onclick="vote(${forumData.indexOf(post)}, 1)">👍 ${post.votes}</span>
+        <span class="vote-btn" onclick="vote(${forumData.indexOf(post)}, -1)">👎</span>
+        <span class="vote-btn" onclick="report(${forumData.indexOf(post)})">🚩 Report</span>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+}
+
+function vote(index, val) {
+  forumData[index].votes += val;
+  localStorage.setItem("forumData", JSON.stringify(forumData));
+  renderPosts();
+}
+
+function report(index) {
+  alert("Post reported for review. Thank you!");
+}
+renderPosts();
+</script>
+</body>
+</html>
